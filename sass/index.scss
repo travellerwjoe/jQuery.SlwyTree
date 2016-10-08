@@ -1,0 +1,103 @@
+@import 'compass/reset';
+@font-face {
+    font-family: 'iconfont';
+    src: url('//at.alicdn.com/t/font_1475205609_112829.eot');
+    /* IE9*/
+    src: url('//at.alicdn.com/t/font_1475205609_112829.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('//at.alicdn.com/t/font_1475205609_112829.woff') format('woff'), /* chrome、firefox */
+    url('//at.alicdn.com/t/font_1475205609_112829.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    url('//at.alicdn.com/t/font_1475205609_112829.svg#iconfont') format('svg');
+    /* iOS 4.1- */
+}
+
+.iconfont {
+    font-family: 'iconfont'
+}
+
+.slwy-dialog {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 500px;
+    width: 500px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    font-size: 13px;
+    .slwy-dialog-header {
+        background-color: #e1f1ff;
+        height: 30px;
+        color: #888;
+    }
+    .slwy-dialog-title {
+        padding: 8px;
+    }
+    .slwy-dialog-body {
+        padding: 15px 0;
+        .slwyTree-select {
+            border: 1px solid #ccc;
+            margin: 6px;
+            height: 350px;
+            padding: 8px;
+            .slwyTree-title {
+                padding: 7px 0;
+            }
+        }
+        .slwyTree-selected-list {
+            li {
+                padding: 5px 0;
+            }
+        }
+    }
+    .slwy-color-active {
+        color: #5786cc;
+    }
+}
+
+.ztree {
+    overflow: hidden;
+    margin-left: -10px;
+}
+
+.search-box {
+    width: 100%;
+    position: relative;
+    .icon-search {
+        position: absolute;
+        left:6px;
+        top: 4px;
+        font-size: 18px;
+        color:#aaa;
+    }
+}
+
+input[type=search] {
+    border-radius: 2px;
+    padding: 6px 6px 6px 25px;
+    border: 1px solid #ccc;
+    width: 100%;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+a {
+    text-decoration: none;
+}
+
+@for $i from 1 through 10 {
+    .width-per-#{$i*10} {
+        width: ($i*10%);
+    }
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>zTree demo</title>
+    <link rel="stylesheet" href="stylesheets/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" href="stylesheets/index.css">
+</head>
+
+<body>
+    <div class="slwy-dialog">
+        <div class="slwy-dialog-header">
+            <div class="slwy-dialog-title">选择部门<span class="slwy-dialog-close iconfont fr">&#xe60b;</span></div>
+        </div>
+        <div class="slwy-dialog-body">
+            <div class="inline-block fl width-per-50">
+                <div class="slwy-dialog-title">选择成员所在部门</div>
+                <div id="slwyTree" class="slwyTree slwyTree-select">
+                    <div class="search-box">
+                        <i class="iconfont icon-search">&#xe60c;</i>
+                        <input type="search" id="zTreeSearch" placeholder="搜索部门">
+                    </div>
+                    <div class="ztree" id="zTree"></div>
+                </div>
+            </div>
+            <div class="inline-block fl width-per-50">
+                <div class="slwy-dialog-title">成员将属于以下部门</div>
+                <div class="slwyTree slwyTree-select">
+                    <div class="slwy-color-active slwyTree-title">已选部门:<span id="selectedTreeCount">0</span><a href="javascript:;" class="iconfont slwyTree-remove-all fr">&#xe60b;</a></div>
+                    <ul class="slwyTree-selected-list">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slwy-dialog-footer">
+        </div>
+    </div>
+    <!-- <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script> -->
+    <script src="js/jQuery.js"></script>
+    <script src="js/jquery.ztree.all.min.js"></script>
+    <script src="js/jquery.ztree.exhide.min.js"></script>
+    <script src="js/jquery.SlwyTree.js"></script>
+    <script>
+    var setting = {
+        searchable: true,
+        searchType: 1, //1||2,搜索过滤方式,1搜索高亮显示,2搜索过滤显示,默认1
+        checkable: true
+    };
+    var treeNodes = [{
+        "name": "四川我要去哪儿科技股份有限公司",
+        open: true,
+        children: [{
+            "name": "差旅平台事业部",
+            open: true,
+            children: [{
+                "name": "国内机票组"
+            }, {
+                "name": "增值业务组"
+            }, {
+                "name": "差旅产品组"
+            }, {
+                "name": "差旅测试部"
+            }]
+        }, {
+            "name": "人力行政中心",
+            open: true,
+            children: [{
+                "name": "人力资源部"
+            }, {
+                "name": "后勤部"
+            }]
+        }, {
+            "name": "技术中心",
+            open: true,
+            children: [{
+                "name": "Web前端研发部"
+            }]
+        }]
+    }]
+    $('#zTree').SlwyTree(setting, treeNodes);
+    </script>
+</body>
+
+</html>
