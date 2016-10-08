@@ -60,6 +60,10 @@
                     _self.renderSelectedNodeList();
                     _self.updateSelectedTreeCount();
                 }
+                this.ztreeObj.setting.callback.onClick = function(e, id, node) {
+                    var checked = !node.checked;
+                    _self.ztreeObj.checkNode(node, checked, false, true);
+                }
             },
             bindRemove: function() {
                 var _self = this;
@@ -71,8 +75,8 @@
                 $(document).on('click', '.slwyTree-remove-all', function(e) {
                     _self.ztreeObj.checkAllNodes(false);
                     _self.selectedNodeList = [];
-                    this.selectorEl.selectedNodeListEl.html('');
-                    this.selectorEl.selectedTreeCountEl.text(0);
+                    _self.selectorEl.selectedNodeListEl.html('');
+                    _self.selectorEl.selectedTreeCountEl.text(0);
                 })
             },
             render: function() {
