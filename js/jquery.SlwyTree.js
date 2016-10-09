@@ -120,6 +120,12 @@
                 $.each(this.searchNodes, function(i, node) {
                     node.highlight = highlight;
                     _self.ztreeObj.updateNode(node);
+
+                    //如果该节点的父节点没展开则展开
+                    if (!node.open) {
+                        var parentNode = node.getParentNode();
+                        _self.ztreeObj.expandNode(parentNode, true);
+                    }
                 })
             },
             //匹配结果高亮搜索过滤
@@ -145,11 +151,17 @@
                         if (!searchNode.isHidden) return false; //如果已经显示，退出
                         this.ztreeObj.showNode(searchNode); //显示当前节点
                         this.ztreeObj.hideNodes(searchNode.children) //并隐藏当前节点的子节点
+                        
+                        //如果该节点的父节点没展开则展开
+                        if(!searchNode.open){
+                            var parentNode=searchNode.getParentNode();
+                            this.ztreeObj.expandNode(parentNode, true);
+                        }
                     }.bind(this))(node)
                 }.bind(this));
             }
         }
 
-       return new SlwyTree($(this), setting, treeNodes);
+        return new SlwyTree($(this), setting, treeNodes);
     };
 })(jQuery);
