@@ -1,7 +1,7 @@
 (function($) {
     $.fn.SlwyTree = function(setting, treeNodes) {
 
-        function slwyTree(selector, setting, treeNodes) {
+        function SlwyTree(selector, setting, treeNodes) {
             this.default = {
                 view: {
                     showLine: false,
@@ -26,7 +26,7 @@
             this.selectedNodeList = []; //已选择的节点列表
             this.init();
         }
-        slwyTree.prototype = {
+        SlwyTree.prototype = {
             constructor: slwyTree,
             init: function() {
                 this.render();
@@ -87,7 +87,7 @@
                 slwyTreeDiv.append(zTreeDiv);
                 if (this.setting.searchable) {
                     searchBoxDiv = $('<div class="search-box">');
-                    searchBoxDiv.append('<i class="iconfont icon-search">&#xe60c;</i><input type="search" id="zTreeSearch" placeholder="搜索部门">');
+                    searchBoxDiv.append('<i class="iconfont icon-search">&#xe60c;</i><input type="search" id="zTreeSearch" placeholder="搜索">');
                     zTreeDiv.before(searchBoxDiv);
                 }
                 if (this.setting.selectable) {
@@ -150,6 +150,6 @@
             }
         }
 
-        new slwyTree($(this), setting, treeNodes);
+       return new SlwyTree($(this), setting, treeNodes);
     };
 })(jQuery);
