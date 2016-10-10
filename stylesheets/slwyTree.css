@@ -10,29 +10,53 @@
   position: relative;
 }
 /* line 8, ../sass/slwyTree.scss */
+.slwyTree .slwyTree-searchbox input[type=search] {
+  border-radius: 2px;
+  padding: 6px 6px 6px 30px;
+  border: 1px solid #ccc;
+  width: 100%;
+  height: 30px;
+}
+/* line 15, ../sass/slwyTree.scss */
 .slwyTree .slwyTree-searchbox .icon-search {
   width: 20px;
   height: 20px;
   position: absolute;
   left: 6px;
-  top: 4px;
+  top: 6px;
   font-size: 18px;
   color: #aaa;
 }
-/* line 18, ../sass/slwyTree.scss */
+/* line 25, ../sass/slwyTree.scss */
 .slwyTree .ztree {
   overflow: hidden;
   margin-left: -10px;
 }
-/* line 23, ../sass/slwyTree.scss */
+/* line 30, ../sass/slwyTree.scss */
 .slwyTree .slwyTree-selected-list li {
   padding: 5px 0;
 }
-/* line 27, ../sass/slwyTree.scss */
+/* line 32, ../sass/slwyTree.scss */
+.slwyTree .slwyTree-selected-list li a {
+  text-decoration: none !important;
+}
+/* line 34, ../sass/slwyTree.scss */
+.slwyTree .slwyTree-selected-list li a:hover {
+  text-decoration: none !important;
+}
+/* line 37, ../sass/slwyTree.scss */
+.slwyTree .slwyTree-selected-list li a:active {
+  text-decoration: none !important;
+}
+/* line 40, ../sass/slwyTree.scss */
+.slwyTree .slwyTree-selected-list li a:visited {
+  text-decoration: none !important;
+}
+/* line 46, ../sass/slwyTree.scss */
 .slwyTree .slwy-color-active {
   color: #5786cc;
 }
-/* line 30, ../sass/slwyTree.scss */
+/* line 49, ../sass/slwyTree.scss */
 .slwyTree .slwyTree-title {
   padding: 7px 0;
 }

@@ -1,4 +1,4 @@
-(function (factory) {
+(function(factory) {
     if (typeof define === 'function' && define.amd) {
         //AMD模式
         define(['jquery', 'zTree'], factory);
@@ -6,14 +6,14 @@
         //全局模式
         factory(jQuery);
     }
-})(function ($, zTree) {
-    $.fn.SlwyTree = function (setting, treeNodes) {
+})(function($, zTree) {
+    $.fn.SlwyTree = function(setting, treeNodes) {
 
         function SlwyTree(selector, setting, treeNodes) {
             this.default = {
                 view: {
                     showLine: false,
-                    fontCss: function (treeId, treeNode) {
+                    fontCss: function(treeId, treeNode) {
                         return (!!treeNode.highlight) ? { color: "#A60000", "font-weight": "bold" } : { color: "#333", "font-weight": "normal" };
                     }
                 },
@@ -32,62 +32,103 @@
             this.searchNodes = []; //搜索匹配节点,默认空
             this.searchFilter = [null, this.searchFilterHighlight, this.searchFilterShow]; //搜索Filter
             this.selectedNodeList = []; //已选择的节点列表
+            this.selectedNodeListEl = []; //已选择的节点元素
             this.init();
         }
         SlwyTree.prototype = {
             constructor: slwyTree,
-            init: function () {
+            init: function() {
                 this.render();
                 this.initSelector();
+                this.initTreeNodes();
                 this.ztreeObj = $.fn.zTree.init($('#zTree'), this.setting, this.treeNodes);
                 this.bind();
             },
-            initSelector: function () {
+            initSelector: function() {
                 this.selectorEl = {
                     selectedNodeListEl: $('.slwyTree-selected-list'),
                     selectedTreeCountEl: $('#selectedTreeCount')
                 };
             },
-            bind: function () {
+            initTreeNodes: function() {
+                if (typeof this.setting.fileIcon === "string") {
+                    var fileIcon = this.setting.fileIcon; //自定义文件图标
+                }
+
+                if (typeof this.setting.folderIcon === "string" && typeof this.setting.folderIconOpen) {
+                    var folderIcon = this.setting.folderIcon; //自定义文件夹（收起）图标
+                    var folderIconOpen = this.setting.folderIconOpen; //自定义文件夹（展开）图标
+                }
+
+                //设置了自定义图标
+                if (fileIcon || folderIcon && folderIconOpen) {
+                    //遍历到没有子节点的底层并加上自定义图标
+                    (function(treeNodes) {
+                        for (var i = 0; i < treeNodes.length; i++) {
+                            if (treeNodes[i].children) {
+                                arguments.callee.call(this, treeNodes[i].children)
+
+                                //设置自定义文件夹图标（收起与展开）
+                                if (folderIcon && folderIconOpen) {
+                                    treeNodes[i].iconClose = folderIcon;
+                                    treeNodes[i].iconOpen = folderIconOpen;
+                                }
+                                continue;
+                            }
+                            //设置了自定义文件图标
+                            if (fileIcon) {
+                                treeNodes[i].icon = fileIcon;
+                            }
+                        }
+                    })(treeNodes)
+                }
+
+            },
+            bind: function() {
                 if (this.setting.searchable) this.bindSearch();
                 if (this.setting.checkable) this.bindCheck();
                 this.bindRemove();
             },
-            bindSearch: function () {
+            bindSearch: function() {
                 var _self = this;
                 $(document).on('input', '#zTreeSearch', this.searchFilter[this.setting.searchType].bind(this));
             },
-            bindCheck: function () {
+            bindCheck: function() {
                 var _self = this;
-                this.ztreeObj.setting.callback.onCheck = function (e, id, node) {
+                this.ztreeObj.setting.callback.onCheck = function(e, id, node) {
+                    // e.stopPropagation();
+                    var el = $(event.target),
+                        aEl = el.closest('li').find('a');
                     if (node.checked) {
                         _self.selectedNodeList.push(node);
+                        _self.selectedNodeListEl.push(aEl);
                     } else {
                         _self.selectedNodeList.splice(_self.selectedNodeList.indexOf(node), 1);
+                        _self.selectedNodeListEl.splice(_self.selectedNodeListEl.indexOf(aEl), 1);
                     }
                     _self.renderSelectedNodeList();
                     _self.updateSelectedTreeCount();
                 }
-                this.ztreeObj.setting.callback.onClick = function (e, id, node) {
+                this.ztreeObj.setting.callback.onClick = function(e, id, node) {
                     var checked = !node.checked;
                     _self.ztreeObj.checkNode(node, checked, false, true);
                 }
             },
-            bindRemove: function () {
+            bindRemove: function() {
                 var _self = this;
-                $(document).on('click', '.slwyTree-remove', function (e) {
+                $(document).on('click', '.slwyTree-remove', function(e) {
                     var tId = $(this).closest('li').data('tid'),
                         removeNode = _self.ztreeObj.getNodeByTId(tId);
                     _self.ztreeObj.checkNode(removeNode, false, false, true);
                 })
-                $(document).on('click', '.slwyTree-remove-all', function (e) {
+                $(document).on('click', '.slwyTree-remove-all', function(e) {
                     _self.ztreeObj.checkAllNodes(false);
                     _self.selectedNodeList = [];
                     _self.selectorEl.selectedNodeListEl.html('');
                     _self.selectorEl.selectedTreeCountEl.text(0);
                 })
             },
-            render: function () {
+            render: function() {
                 var slwyTreeDiv = $('<div class="slwyTree slwyTree-select">'),
                     zTreeDiv = $('<div class="ztree" id="zTree"></div>'),
                     searchBoxDiv,
@@ -105,7 +146,7 @@
                     }
                     var html = [];
                     selectBoxDiv = $(this.setting.selectBoxEl);
-                    html.push('<div class="slwyTree slwyTree-select">');
+                    html.push('<div class="slwyTree slwyTree-select ztree">');
                     html.push('<div class="slwy-color-active slwyTree-title">已选:<span id="selectedTreeCount">0</span><a href="javascript:;" class="slwyTree-remove-all fr">刪除全部</a></div>');
                     html.push('<ul class="slwyTree-selected-list"></ul>');
                     html.push('</div>');
@@ -114,19 +155,21 @@
                 }
                 this.selector.html(slwyTreeDiv);
             },
-            renderSelectedNodeList: function () {
+            renderSelectedNodeList: function() {
+
                 var html = '';
                 for (var i = 0; i < this.selectedNodeList.length; i++) {
-                    html += '<li data-tid="' + this.selectedNodeList[i].tId + '">' + this.selectedNodeList[i].name + '<a href="javascript:;" class="slwyTree-remove fr">刪除</a></li>';
+                    var aHtml=$('<li>').append(this.selectedNodeListEl[i].removeClass('curSelectedNode').clone()).html();
+                    html += '<li data-tid="' + this.selectedNodeList[i].tId + '">'+ aHtml + '<a href="javascript:;" class="slwyTree-remove fr">刪除</a></li>';
                 }
                 this.selectorEl.selectedNodeListEl.html(html);
             },
-            updateSelectedTreeCount: function () {
+            updateSelectedTreeCount: function() {
                 this.selectorEl.selectedTreeCountEl.text(this.selectedNodeList.length);
             },
-            highlightNode: function (highlight) {
+            highlightNode: function(highlight) {
                 var _self = this;
-                $.each(this.searchNodes, function (i, node) {
+                $.each(this.searchNodes, function(i, node) {
                     node.highlight = highlight;
                     _self.ztreeObj.updateNode(node);
 
@@ -138,7 +181,7 @@
                 })
             },
             //匹配结果高亮搜索过滤
-            searchFilterHighlight: function (event) {
+            searchFilterHighlight: function(event) {
                 var keyword = $.trim(event.target.value);
 
                 this.highlightNode(false);
@@ -147,13 +190,13 @@
                 this.highlightNode(true);
             },
             //显示隐藏搜索过滤
-            searchFilterShow: function (event) {
+            searchFilterShow: function(event) {
                 var keyword = $.trim(event.target.value),
                     allNodes = this.ztreeObj.getNodes(); //所有节点
                 this.searchNodes = this.ztreeObj.getNodesByParamFuzzy('name', keyword);; //搜索匹配节点
                 this.ztreeObj.hideNodes(allNodes);
-                $.each(this.searchNodes, function (i, node) {
-                    (function (searchNode) {
+                $.each(this.searchNodes, function(i, node) {
+                    (function(searchNode) {
                         if (!searchNode) return false; //如果节点不存在，退出
                         var searchParentNode = searchNode.getParentNode(); //搜索匹配节点的父节点
                         arguments.callee.call(this, searchParentNode); //递归到根节点
