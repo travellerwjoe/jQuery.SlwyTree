@@ -106,7 +106,7 @@
                     var html = [];
                     selectBoxDiv = $(this.setting.selectBoxEl);
                     html.push('<div class="slwyTree slwyTree-select">');
-                    html.push('<div class="slwy-color-active slwyTree-title">已选:<span id="selectedTreeCount">0</span><a href="javascript:;" class="iconfont slwyTree-remove-all fr">&#xe60b;</a></div>');
+                    html.push('<div class="slwy-color-active slwyTree-title">已选:<span id="selectedTreeCount">0</span><a href="javascript:;" class="slwyTree-remove-all fr">刪除全部</a></div>');
                     html.push('<ul class="slwyTree-selected-list"></ul>');
                     html.push('</div>');
 
@@ -117,7 +117,7 @@
             renderSelectedNodeList: function () {
                 var html = '';
                 for (var i = 0; i < this.selectedNodeList.length; i++) {
-                    html += '<li data-tid="' + this.selectedNodeList[i].tId + '">' + this.selectedNodeList[i].name + '<a href="javascript:;" class="iconfont slwyTree-remove fr">&#xe60b;</a></li>';
+                    html += '<li data-tid="' + this.selectedNodeList[i].tId + '">' + this.selectedNodeList[i].name + '<a href="javascript:;" class="slwyTree-remove fr">刪除</a></li>';
                 }
                 this.selectorEl.selectedNodeListEl.html(html);
             },
