@@ -1,11 +1,19 @@
-(function($) {
-    $.fn.SlwyTree = function(setting, treeNodes) {
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        //AMD模式
+        define(['jquery', 'zTree'], factory);
+    } else {
+        //全局模式
+        factory(jQuery);
+    }
+})(function ($, zTree) {
+    $.fn.SlwyTree = function (setting, treeNodes) {
 
         function SlwyTree(selector, setting, treeNodes) {
             this.default = {
                 view: {
                     showLine: false,
-                    fontCss: function(treeId, treeNode) {
+                    fontCss: function (treeId, treeNode) {
                         return (!!treeNode.highlight) ? { color: "#A60000", "font-weight": "bold" } : { color: "#333", "font-weight": "normal" };
                     }
                 },
@@ -28,30 +36,30 @@
         }
         SlwyTree.prototype = {
             constructor: slwyTree,
-            init: function() {
+            init: function () {
                 this.render();
                 this.initSelector();
                 this.ztreeObj = $.fn.zTree.init($('#zTree'), this.setting, this.treeNodes);
                 this.bind();
             },
-            initSelector: function() {
+            initSelector: function () {
                 this.selectorEl = {
                     selectedNodeListEl: $('.slwyTree-selected-list'),
                     selectedTreeCountEl: $('#selectedTreeCount')
                 };
             },
-            bind: function() {
+            bind: function () {
                 if (this.setting.searchable) this.bindSearch();
                 if (this.setting.checkable) this.bindCheck();
                 this.bindRemove();
             },
-            bindSearch: function() {
+            bindSearch: function () {
                 var _self = this;
                 $(document).on('input', '#zTreeSearch', this.searchFilter[this.setting.searchType].bind(this));
             },
-            bindCheck: function() {
+            bindCheck: function () {
                 var _self = this;
-                this.ztreeObj.setting.callback.onCheck = function(e, id, node) {
+                this.ztreeObj.setting.callback.onCheck = function (e, id, node) {
                     if (node.checked) {
                         _self.selectedNodeList.push(node);
                     } else {
@@ -60,26 +68,26 @@
                     _self.renderSelectedNodeList();
                     _self.updateSelectedTreeCount();
                 }
-                this.ztreeObj.setting.callback.onClick = function(e, id, node) {
+                this.ztreeObj.setting.callback.onClick = function (e, id, node) {
                     var checked = !node.checked;
                     _self.ztreeObj.checkNode(node, checked, false, true);
                 }
             },
-            bindRemove: function() {
+            bindRemove: function () {
                 var _self = this;
-                $(document).on('click', '.slwyTree-remove', function(e) {
+                $(document).on('click', '.slwyTree-remove', function (e) {
                     var tId = $(this).closest('li').data('tid'),
                         removeNode = _self.ztreeObj.getNodeByTId(tId);
                     _self.ztreeObj.checkNode(removeNode, false, false, true);
                 })
-                $(document).on('click', '.slwyTree-remove-all', function(e) {
+                $(document).on('click', '.slwyTree-remove-all', function (e) {
                     _self.ztreeObj.checkAllNodes(false);
                     _self.selectedNodeList = [];
                     _self.selectorEl.selectedNodeListEl.html('');
                     _self.selectorEl.selectedTreeCountEl.text(0);
                 })
             },
-            render: function() {
+            render: function () {
                 var slwyTreeDiv = $('<div class="slwyTree slwyTree-select">'),
                     zTreeDiv = $('<div class="ztree" id="zTree"></div>'),
                     searchBoxDiv,
@@ -105,19 +113,19 @@
                 }
                 this.selector.html(slwyTreeDiv);
             },
-            renderSelectedNodeList: function() {
+            renderSelectedNodeList: function () {
                 var html = '';
                 for (var i = 0; i < this.selectedNodeList.length; i++) {
                     html += '<li data-tid="' + this.selectedNodeList[i].tId + '">' + this.selectedNodeList[i].name + '<a href="javascript:;" class="iconfont slwyTree-remove fr">&#xe60b;</a></li>';
                 }
                 this.selectorEl.selectedNodeListEl.html(html);
             },
-            updateSelectedTreeCount: function() {
+            updateSelectedTreeCount: function () {
                 this.selectorEl.selectedTreeCountEl.text(this.selectedNodeList.length);
             },
-            highlightNode: function(highlight) {
+            highlightNode: function (highlight) {
                 var _self = this;
-                $.each(this.searchNodes, function(i, node) {
+                $.each(this.searchNodes, function (i, node) {
                     node.highlight = highlight;
                     _self.ztreeObj.updateNode(node);
 
@@ -129,7 +137,7 @@
                 })
             },
             //匹配结果高亮搜索过滤
-            searchFilterHighlight: function(event) {
+            searchFilterHighlight: function (event) {
                 var keyword = $.trim(event.target.value);
 
                 this.highlightNode(false);
@@ -138,23 +146,23 @@
                 this.highlightNode(true);
             },
             //显示隐藏搜索过滤
-            searchFilterShow: function(event) {
+            searchFilterShow: function (event) {
                 var keyword = $.trim(event.target.value),
                     allNodes = this.ztreeObj.getNodes(); //所有节点
                 this.searchNodes = this.ztreeObj.getNodesByParamFuzzy('name', keyword);; //搜索匹配节点
                 this.ztreeObj.hideNodes(allNodes);
-                $.each(this.searchNodes, function(i, node) {
-                    (function(searchNode) {
+                $.each(this.searchNodes, function (i, node) {
+                    (function (searchNode) {
                         if (!searchNode) return false; //如果节点不存在，退出
                         var searchParentNode = searchNode.getParentNode(); //搜索匹配节点的父节点
                         arguments.callee.call(this, searchParentNode); //递归到根节点
                         if (!searchNode.isHidden) return false; //如果已经显示，退出
                         this.ztreeObj.showNode(searchNode); //显示当前节点
                         this.ztreeObj.hideNodes(searchNode.children) //并隐藏当前节点的子节点
-                        
+
                         //如果该节点的父节点没展开则展开
-                        if(!searchNode.open){
-                            var parentNode=searchNode.getParentNode();
+                        if (!searchNode.open) {
+                            var parentNode = searchNode.getParentNode();
                             this.ztreeObj.expandNode(parentNode, true);
                         }
                     }.bind(this))(node)
@@ -164,4 +172,4 @@
 
         return new SlwyTree($(this), setting, treeNodes);
     };
-})(jQuery);
+});
