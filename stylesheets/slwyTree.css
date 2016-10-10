@@ -1,15 +1,16 @@
 /* line 1, ../sass/slwyTree.scss */
 .slwyTree {
+  font-family: 'Microsoft Yahei';
   margin: 6px;
   height: 100%;
   padding: 8px;
 }
-/* line 5, ../sass/slwyTree.scss */
+/* line 6, ../sass/slwyTree.scss */
 .slwyTree .slwyTree-searchbox {
   width: 100%;
   position: relative;
 }
-/* line 8, ../sass/slwyTree.scss */
+/* line 9, ../sass/slwyTree.scss */
 .slwyTree .slwyTree-searchbox input[type=search] {
   border-radius: 2px;
   padding: 6px 6px 6px 30px;
@@ -17,7 +18,7 @@
   width: 100%;
   height: 30px;
 }
-/* line 15, ../sass/slwyTree.scss */
+/* line 16, ../sass/slwyTree.scss */
 .slwyTree .slwyTree-searchbox .icon-search {
   width: 20px;
   height: 20px;
@@ -27,36 +28,51 @@
   font-size: 18px;
   color: #aaa;
 }
-/* line 25, ../sass/slwyTree.scss */
+/* line 26, ../sass/slwyTree.scss */
 .slwyTree .ztree {
   overflow: hidden;
   margin-left: -10px;
 }
 /* line 30, ../sass/slwyTree.scss */
+.slwyTree .ztree * {
+  font-size: inherit !important;
+  font-family: inherit !important;
+}
+/* line 35, ../sass/slwyTree.scss */
 .slwyTree .slwyTree-selected-list li {
-  padding: 5px 0;
+  padding: 10px;
+  border-bottom: 1px solid #e6e6e6;
 }
-/* line 32, ../sass/slwyTree.scss */
+/* line 38, ../sass/slwyTree.scss */
+.slwyTree .slwyTree-selected-list li:hover {
+  background-color: #f0f8fd;
+}
+/* line 41, ../sass/slwyTree.scss */
 .slwyTree .slwyTree-selected-list li a {
-  text-decoration: none !important;
-}
-/* line 34, ../sass/slwyTree.scss */
-.slwyTree .slwyTree-selected-list li a:hover {
-  text-decoration: none !important;
-}
-/* line 37, ../sass/slwyTree.scss */
-.slwyTree .slwyTree-selected-list li a:active {
-  text-decoration: none !important;
-}
-/* line 40, ../sass/slwyTree.scss */
-.slwyTree .slwyTree-selected-list li a:visited {
-  text-decoration: none !important;
+  color: #2f77e3;
 }
 /* line 46, ../sass/slwyTree.scss */
+.slwyTree a {
+  color: #2f77e3;
+  text-decoration: none !important;
+}
+/* line 49, ../sass/slwyTree.scss */
+.slwyTree a:hover {
+  text-decoration: none !important;
+}
+/* line 52, ../sass/slwyTree.scss */
+.slwyTree a:active {
+  text-decoration: none !important;
+}
+/* line 55, ../sass/slwyTree.scss */
+.slwyTree a:visited {
+  text-decoration: none !important;
+}
+/* line 59, ../sass/slwyTree.scss */
 .slwyTree .slwy-color-active {
   color: #5786cc;
 }
-/* line 49, ../sass/slwyTree.scss */
+/* line 62, ../sass/slwyTree.scss */
 .slwyTree .slwyTree-title {
   padding: 7px 0;
 }

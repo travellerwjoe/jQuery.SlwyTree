@@ -1,4 +1,5 @@
 .slwyTree {
+    font-family: 'Microsoft Yahei';
     margin: 6px;
     height: 100%;
     padding: 8px;
@@ -26,21 +27,33 @@
         overflow: hidden;
         margin-left: -10px;
     }
+    .ztree * {
+        font-size: inherit!important;
+        font-family: inherit!important;
+    }
     .slwyTree-selected-list {
         li {
-            padding: 5px 0;
-            a {
-                text-decoration: none!important;
-                &:hover {
-                    text-decoration: none!important;
-                }
-                &:active {
-                    text-decoration: none!important;
-                }
-                &:visited {
-                    text-decoration: none!important;
-                }
+            padding: 10px;
+            border-bottom: 1px solid #e6e6e6;
+            &:hover {
+                background-color: #f0f8fd;
             }
+            a {
+                color: #2f77e3;
+            }
+        }
+    }
+    a {
+        color: #2f77e3;
+        text-decoration: none!important;
+        &:hover {
+            text-decoration: none!important;
+        }
+        &:active {
+            text-decoration: none!important;
+        }
+        &:visited {
+            text-decoration: none!important;
         }
     }
     .slwy-color-active {

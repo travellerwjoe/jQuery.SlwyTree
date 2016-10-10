@@ -148,9 +148,11 @@
                     }
                     var html = [];
                     selectBoxDiv = $(this.setting.selectBoxEl);
-                    html.push('<div class="slwyTree slwyTree-select ztree">');
-                    html.push('<div class="slwy-color-active slwyTree-title">已选:<span id="selectedTreeCount">0</span><a href="javascript:;" class="slwyTree-remove-all fr">刪除全部</a></div>');
+                    html.push('<div class="slwyTree slwyTree-select">');
+                    html.push('<div class="ztree">');
+                    html.push('<div class="slwy-color-active slwyTree-title">已选（<span id="selectedTreeCount">0</span>）<a href="javascript:;" class="slwyTree-remove-all fr">全部删除</a></div>');
                     html.push('<ul class="slwyTree-selected-list"></ul>');
+                    html.push('</div>');
                     html.push('</div>');
 
                     selectBoxDiv.append(html.join(''));
