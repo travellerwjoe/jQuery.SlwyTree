@@ -98,7 +98,7 @@
                 this.ztreeObj.setting.callback.onCheck = function(e, id, node) {
                     // e.stopPropagation();
                     var el = $(event.target),
-                        aEl = el.closest('li').find('a');
+                        aEl = el.closest('li').find('>a');
                     if (node.checked) {
                         _self.selectedNodeList.push(node);
                         _self.selectedNodeListEl.push(aEl);
@@ -156,7 +156,6 @@
                 this.selector.html(slwyTreeDiv);
             },
             renderSelectedNodeList: function() {
-
                 var html = '';
                 for (var i = 0; i < this.selectedNodeList.length; i++) {
                     var aHtml=$('<li>').append(this.selectedNodeListEl[i].removeClass('curSelectedNode').clone()).html();
