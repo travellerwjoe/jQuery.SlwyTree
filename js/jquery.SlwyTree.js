@@ -94,8 +94,9 @@
                     selectBoxDiv;
                 slwyTreeDiv.append(zTreeDiv);
                 if (this.setting.searchable) {
-                    searchBoxDiv = $('<div class="search-box">');
-                    searchBoxDiv.append('<i class="iconfont icon-search">&#xe60c;</i><input type="search" id="zTreeSearch" placeholder="搜索">');
+                    searchBoxDiv = $('<div class="slwyTree-searchbox">');
+                    searchBoxDiv.append('<i class="icon-search"><svg width="100%" height="100%" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g class="transform-group"><g transform="scale(0.2, 0.2)"><path d="M936.4725 824.3641 737.6731 620.871c-1.9468-1.9986-4.4322-2.8631-6.5948-4.5379 41.6635-58.6832 66.3567-130.2237 66.3567-207.7082 0-198.5754-161.0274-359.6512-359.6659-359.6512-198.6355 0-359.6659 161.0758-359.6659 359.6512 0 198.6303 161.0304 359.6502 359.6659 359.6502 82.1377 0 157.5716-27.7722 218.0921-74.1317 1.0803 1.2941 1.511 2.8631 2.6473 4.0503l198.7974 203.546c10.8071 11.0785 25.184 16.6427 39.5568 16.6427 13.9401 0 27.9372-5.2404 38.6884-15.7783C957.3861 881.3155 957.8169 846.2482 936.4725 824.3641zM133.438 408.625c0-167.7742 136.552-304.3197 304.3321-304.3197 167.8371 0 304.3321 136.5464 304.3321 304.3197 0 167.8312-136.4951 304.3207-304.3321 304.3207C269.99 712.9456 133.438 576.4562 133.438 408.625z" fill="#aaa"></path></g></g></svg></i>');
+                    searchBoxDiv.append('<input type="search" id="zTreeSearch" placeholder="搜索">');
                     zTreeDiv.before(searchBoxDiv);
                 }
                 if (this.setting.selectable) {

@@ -36,42 +36,14 @@
     }
     .slwy-dialog-body {
         padding: 15px 0;
-        .slwyTree-select {
-            border: 1px solid #ccc;
-            margin: 6px;
-            height: 350px;
-            padding: 8px;
-            .slwyTree-title {
-                padding: 7px 0;
-            }
-        }
-        .slwyTree-selected-list {
-            li {
-                padding: 5px 0;
-            }
-        }
+        
     }
-    .slwy-color-active {
-        color: #5786cc;
-    }
+    
 }
 
-.ztree {
-    overflow: hidden;
-    margin-left: -10px;
-}
 
-.search-box {
-    width: 100%;
-    position: relative;
-    .icon-search {
-        position: absolute;
-        left:6px;
-        top: 4px;
-        font-size: 18px;
-        color:#aaa;
-    }
-}
+
+
 
 input[type=search] {
     border-radius: 2px;
