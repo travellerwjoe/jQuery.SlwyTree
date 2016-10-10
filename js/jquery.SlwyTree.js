@@ -103,15 +103,9 @@
                         _self.selectedNodeList.push(node);
                         _self.selectedNodeListEl.push(aEl);
                     } else {
-                        var elIndex;//selectedNodeListEl匹配索引
-                        _self.selectedNodeList.splice(_self.selectedNodeList.indexOf(node), 1);
-
-                        for(var i=0;i<_self.selectedNodeListEl.length;i++){
-                            if(_self.selectedNodeListEl[i][0]==aEl[0]){
-                                elIndex=i;
-                            }
-                        }
-                        _self.selectedNodeListEl.splice(elIndex, 1);
+                        var index=_self.selectedNodeList.indexOf(node); //匹配索引
+                        _self.selectedNodeList.splice(index, 1);
+                        _self.selectedNodeListEl.splice(index, 1);
                     }
                     _self.renderSelectedNodeList();
                     _self.updateSelectedTreeCount();
@@ -131,6 +125,7 @@
                 $(document).on('click', '.slwyTree-remove-all', function(e) {
                     _self.ztreeObj.checkAllNodes(false);
                     _self.selectedNodeList = [];
+                    _self.selectedNodeListEl = [];
                     _self.selectorEl.selectedNodeListEl.html('');
                     _self.selectorEl.selectedTreeCountEl.text(0);
                 })
@@ -166,8 +161,8 @@
 
                 var html = '';
                 for (var i = 0; i < this.selectedNodeList.length; i++) {
-                    var aHtml=$('<li>').append(this.selectedNodeListEl[i].removeClass('curSelectedNode').clone()).html();
-                    html += '<li data-tid="' + this.selectedNodeList[i].tId + '">'+ aHtml + '<a href="javascript:;" class="slwyTree-remove fr">刪除</a></li>';
+                    var aHtml = $('<li>').append(this.selectedNodeListEl[i].removeClass('curSelectedNode').clone()).html();
+                    html += '<li data-tid="' + this.selectedNodeList[i].tId + '">' + aHtml + '<a href="javascript:;" class="slwyTree-remove fr">刪除</a></li>';
                 }
                 this.selectorEl.selectedNodeListEl.html(html);
             },
