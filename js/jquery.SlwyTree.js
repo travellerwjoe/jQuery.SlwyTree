@@ -160,7 +160,7 @@
                     slwyTreeDiv.addClass('slwy-style');
                 }
                 //设置了switch图标风格
-                if(this.setting.iconSwitchStyle=="arrow"){
+                if (this.setting.iconSwitchStyle == "arrow") {
                     slwyTreeDiv.addClass('slwy-switch-arrow')
                 }
                 slwyTreeDiv.append(zTreeDiv);
@@ -176,7 +176,16 @@
                     }
                     var html = [];
                     selectBoxDiv = $(this.setting.selectBoxEl);
-                    html.push('<div class="slwyTree slwyTree-select">');
+                    html.push('<div class="slwyTree slwyTree-select ');
+                    //设置了图标风格
+                    if (this.setting.iconStyle == "slwy") {
+                        html.push('slwy-style');
+                    }
+                    //设置了switch图标风格
+                    if (this.setting.iconSwitchStyle == "arrow") {
+                        html.push('slwy-switch-arrow')
+                    }
+                    html.push('">');
                     html.push('<div class="ztree">');
                     html.push('<div class="slwy-color-active slwyTree-title">已选（<span id="selectedTreeCount">0</span>）<a href="javascript:;" class="slwyTree-remove-all fr">全部删除</a></div>');
                     html.push('<ul class="slwyTree-selected-list"></ul>');
