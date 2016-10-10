@@ -103,8 +103,15 @@
                         _self.selectedNodeList.push(node);
                         _self.selectedNodeListEl.push(aEl);
                     } else {
+                        var elIndex;//selectedNodeListEl匹配索引
                         _self.selectedNodeList.splice(_self.selectedNodeList.indexOf(node), 1);
-                        _self.selectedNodeListEl.splice(_self.selectedNodeListEl.indexOf(aEl), 1);
+
+                        for(var i=0;i<_self.selectedNodeListEl.length;i++){
+                            if(_self.selectedNodeListEl[i][0]==aEl[0]){
+                                elIndex=i;
+                            }
+                        }
+                        _self.selectedNodeListEl.splice(elIndex, 1);
                     }
                     _self.renderSelectedNodeList();
                     _self.updateSelectedTreeCount();
@@ -156,6 +163,7 @@
                 this.selector.html(slwyTreeDiv);
             },
             renderSelectedNodeList: function() {
+
                 var html = '';
                 for (var i = 0; i < this.selectedNodeList.length; i++) {
                     var aHtml=$('<li>').append(this.selectedNodeListEl[i].removeClass('curSelectedNode').clone()).html();
