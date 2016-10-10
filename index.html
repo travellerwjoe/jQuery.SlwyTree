@@ -42,9 +42,12 @@
             checkable: true, //是否需要checkbox
             selectable: true, //是否可选择
             selectBoxEl: '#slwyTreeSelectBox', //选择列表容器，前提selectable为true
-            fileIcon:'./img/icon-user.png',//自定义文件图标（最底层没有子节点的节点图标）
-            folderIcon:'./img/icon-folder.png',//自定义文件夹图标（收起）
-            folderIconOpen:'./img/icon-folder-open.png'//自定义文件夹图标（展开）
+            // fileIcon: './img/icon-user.png', //自定义文件图标（最底层没有子节点的节点图标）
+            // folderIcon: './img/icon-folder.png', //自定义文件夹图标（收起）
+            // folderIconOpen: './img/icon-folder-open.png', //自定义文件夹图标（展开）
+            // showIcon:false,//是否显示图标，默认为true
+            iconStyle:'slwy',//图标风格，目前支持slwy和默认两种风格
+            // iconSwitchStyle:'arrow',//switch图标风格，目前支持arrow箭头和默认加减两种风格
         };
         var treeNodes = [{
             "name": "四川我要去哪儿科技股份有限公司",
@@ -60,11 +63,11 @@
                     "name": "差旅产品组"
                 }, {
                     "name": "差旅测试部"
-                },{
-                    "name":"test",
-                    open:false,
-                    children:[{
-                        "name":"123456"
+                }, {
+                    "name": "test",
+                    open: false,
+                    children: [{
+                        "name": "123456"
                     }]
                 }]
             }, {

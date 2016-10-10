@@ -1,3 +1,8 @@
+/**
+ * Slwy树形jQuery插件
+ * @author Joe.Wu
+ * @version 开发阶段
+ */
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
         //AMD模式
@@ -13,6 +18,7 @@
             this.default = {
                 view: {
                     showLine: false,
+                    showIcon: setting.showIcon === false ? false : true,
                     fontCss: function(treeId, treeNode) {
                         return (!!treeNode.highlight) ? { color: "#A60000", "font-weight": "bold" } : { color: "#333", "font-weight": "normal" };
                     }
@@ -36,7 +42,7 @@
             this.init();
         }
         SlwyTree.prototype = {
-            constructor: slwyTree,
+            constructor: SlwyTree,
             init: function() {
                 this.render();
                 this.initSelector();
@@ -51,6 +57,11 @@
                 };
             },
             initTreeNodes: function() {
+                //showIcon为false不用再设置自定义图标
+                if (!this.setting.view.showIcon) {
+                    return false;
+                }
+
                 if (typeof this.setting.fileIcon === "string") {
                     var fileIcon = this.setting.fileIcon; //自定义文件图标
                 }
@@ -85,15 +96,21 @@
 
             },
             bind: function() {
-                if (this.setting.searchable) this.bindSearch();
-                if (this.setting.checkable) this.bindCheck();
+                this.bindSearch();
+                this.bindCheck();
                 this.bindRemove();
             },
             bindSearch: function() {
+                if (!this.setting.searchable) {
+                    return false;
+                }
                 var _self = this;
                 $(document).on('input', '#zTreeSearch', this.searchFilter[this.setting.searchType].bind(this));
             },
             bindCheck: function() {
+                if (!this.setting.checkable) {
+                    return false;
+                }
                 var _self = this;
                 this.ztreeObj.setting.callback.onCheck = function(e, id, node) {
                     // e.stopPropagation();
@@ -103,7 +120,7 @@
                         _self.selectedNodeList.push(node);
                         _self.selectedNodeListEl.push(aEl);
                     } else {
-                        var index=_self.selectedNodeList.indexOf(node); //匹配索引
+                        var index = _self.selectedNodeList.indexOf(node); //匹配索引
                         _self.selectedNodeList.splice(index, 1);
                         _self.selectedNodeListEl.splice(index, 1);
                     }
@@ -116,6 +133,9 @@
                 }
             },
             bindRemove: function() {
+                if (!this.setting.selectable) {
+                    return false;
+                }
                 var _self = this;
                 $(document).on('click', '.slwyTree-remove', function(e) {
                     var tId = $(this).closest('li').data('tid'),
@@ -132,9 +152,17 @@
             },
             render: function() {
                 var slwyTreeDiv = $('<div class="slwyTree slwyTree-select">'),
-                    zTreeDiv = $('<div class="ztree" id="zTree"></div>'),
+                    zTreeDiv = $('<div class="ztree" id="zTree">'),
                     searchBoxDiv,
                     selectBoxDiv;
+                //设置了图标风格
+                if (this.setting.iconStyle == "slwy") {
+                    slwyTreeDiv.addClass('slwy-style');
+                }
+                //设置了switch图标风格
+                if(this.setting.iconSwitchStyle=="arrow"){
+                    slwyTreeDiv.addClass('slwy-switch-arrow')
+                }
                 slwyTreeDiv.append(zTreeDiv);
                 if (this.setting.searchable) {
                     searchBoxDiv = $('<div class="slwyTree-searchbox">');

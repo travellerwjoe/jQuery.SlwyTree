@@ -3,6 +3,7 @@
     margin: 6px;
     height: 100%;
     padding: 8px;
+    overflow: auto;
     .slwyTree-searchbox {
         width: 100%;
         position: relative;
@@ -33,13 +34,19 @@
     }
     .slwyTree-selected-list {
         li {
-            padding: 10px;
+            padding: 10px 0;
             border-bottom: 1px solid #e6e6e6;
             &:hover {
                 background-color: #f0f8fd;
             }
             a {
                 color: #2f77e3;
+            }
+            a[treenode_a]{
+                max-width: 84%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
         }
     }
@@ -61,5 +68,33 @@
     }
     .slwyTree-title {
         padding: 7px 0;
+    }
+}
+.slwyTree.slwy-style,.slwyTree.slwy-switch-arrow{
+    .ztree li span.switch{
+        background-image: url("../img/slwyTree-style.png");
+    }
+    .ztree li span.switch.noline_docu{
+        background:none;
+    }
+    .ztree li span.switch.noline_open{
+        background-position: -64px 0;
+    }
+    .ztree li span.switch.noline_close{
+        background-position: -48px 0;
+    }
+}
+.slwyTree.slwy-style{
+    .ztree li span[treenode_ico]{
+        background-image: url("../img/slwyTree-style.png");
+    }
+    .ztree li span[treenode_ico].ico_docu{
+        background-position: -32px 0;
+    }
+    .ztree li span[treenode_ico].ico_close{
+        background-position: 0 0;
+    }
+    .ztree li span[treenode_ico].ico_open{
+        background-position: -16px 0;
     }
 }
