@@ -20,7 +20,7 @@
                     showLine: false,
                     showIcon: setting.showIcon === false ? false : true,
                     fontCss: function(treeId, treeNode) {
-                        return (!!treeNode.highlight) ? { color: "#A60000", "font-weight": "bold" } : { color: "#333", "font-weight": "normal" };
+                        return (!!treeNode.highlight) ? { color: "#ff6706", "font-weight": "bold" } : { color: "#333", "font-weight": "normal" };
                     }
                 },
                 check: {
@@ -187,12 +187,18 @@
                     }
                     html.push('">');
                     html.push('<div class="ztree">');
-                    html.push('<div class="slwy-color-active slwyTree-title">已选（<span id="selectedTreeCount">0</span>）<a href="javascript:;" class="slwyTree-remove-all fr">全部删除</a></div>');
+                    html.push('<div class="slwyTree-title">');
+                    html.push(this.setting.selectBoxTitleText||'');
+                    html.push('（');
+                    html.push('<span id="selectedTreeCount">0</span>');
+                    html.push(this.setting.selectBoxTitleSymbol||'');
+                    html.push('）');
+                    html.push('<a href="javascript:;" class="slwyTree-remove-all fr">全部删除</a></div>');
                     html.push('<ul class="slwyTree-selected-list"></ul>');
                     html.push('</div>');
                     html.push('</div>');
 
-                    selectBoxDiv.append(html.join(''));
+                    selectBoxDiv.css({'overflow':'auto','height':'100%'}).append(html.join(''));
                 }
                 this.selector.html(slwyTreeDiv);
             },

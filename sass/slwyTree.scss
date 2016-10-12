@@ -1,8 +1,7 @@
 .slwyTree {
     font-family: 'Microsoft Yahei';
-    margin: 6px;
     height: 100%;
-    padding: 8px;
+    padding: 14px;
     overflow: auto;
     .slwyTree-searchbox {
         width: 100%;
@@ -27,6 +26,9 @@
     .ztree {
         overflow: hidden;
         margin-left: -10px;
+        li{
+            padding:2px 0;
+        }
     }
     .ztree * {
         font-size: inherit!important;
@@ -63,11 +65,9 @@
             text-decoration: none!important;
         }
     }
-    .slwy-color-active {
-        color: #5786cc;
-    }
     .slwyTree-title {
         padding: 7px 0;
+        color: #5786cc;
     }
 }
 .slwyTree.slwy-style,.slwyTree.slwy-switch-arrow{
