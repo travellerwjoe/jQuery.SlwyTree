@@ -170,7 +170,8 @@
                 if (this.setting.searchable) {
                     searchBoxDiv = $('<div class="slwyTree-searchbox">');
                     searchBoxIcon=$('<i class="slwyTree-searchbox-icon">');
-                    searchBoxInput=$('<input type="search" id="zTreeSearch" placeholder="搜索">');
+                    searchBoxInput=$('<input type="search" id="zTreeSearch">');
+                    searchBoxInput.attr('placeholder',this.setting.searchBoxText);
                     searchBoxDiv.append(searchBoxIcon);
                     searchBoxDiv.append(searchBoxInput);
                     zTreeDiv.before(searchBoxDiv);
