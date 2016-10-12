@@ -53,10 +53,10 @@
                                 if (this.setting.selectContainSelf) {
                                     //checkbox勾选操作会影响子级节点
                                     return { "Y": "s", "N": "s" };
-                                } else if(this.setting.selectOnlyChildren){
+                                } else if (this.setting.selectOnlyChildren) {
                                     //checkbox勾选操作会影响父子级节点
                                     return { "Y": "ps", "N": "ps" };
-                                }else{
+                                } else {
                                     //checkbox勾选操作会影响子级节点
                                     return { "Y": "s", "N": "s" };
                                 }
@@ -74,7 +74,6 @@
             this.searchNodes = []; //搜索匹配节点,默认空
             this.searchFilter = [null, this.searchFilterHighlight, this.searchFilterShow]; //搜索Filter
             this.selectedNodeList = []; //已选择的节点列表
-            this.selectedNodeListEl = []; //已选择的节点元素
             this.selectedListData = []; //已选择的节点的绑定数据
             this.init();
         }
@@ -86,6 +85,7 @@
                 this.initTreeNodes();
                 this.ztreeObj = $.fn.zTree.init($('#zTree'), this.zTreeSetting, this.treeNodes);
                 this.bind();
+                this.initSelectedNodeList();
             },
             initSelector: function() {
                 this.selectorEl = {
@@ -93,6 +93,7 @@
                     selectedTreeCountEl: $('#selectedTreeCount')
                 };
             },
+            //对节点数据改造
             initTreeNodes: function() {
                 //showIcon为false不用再设置自定义图标
                 if (!this.setting.showIcon) {
@@ -108,29 +109,37 @@
                     var folderIconOpen = this.setting.folderIconOpen; //自定义文件夹（展开）图标
                 }
 
-                //设置了自定义图标
-                if (fileIcon || folderIcon && folderIconOpen) {
-                    //遍历到没有子节点的底层并加上自定义图标
-                    (function(treeNodes) {
-                        for (var i = 0; i < treeNodes.length; i++) {
-                            if (treeNodes[i].children) {
-                                arguments.callee.call(this, treeNodes[i].children)
 
-                                //设置自定义文件夹图标（收起与展开）
-                                if (folderIcon && folderIconOpen) {
-                                    treeNodes[i].iconClose = folderIcon;
-                                    treeNodes[i].iconOpen = folderIconOpen;
-                                }
-                                continue;
+                ///遍历节点树并加上自定义图标
+                (function(treeNodes) {
+                    for (var i = 0; i < treeNodes.length; i++) {
+                        var thisNode = treeNodes[i];
+                        if (thisNode.children) {
+                            arguments.callee.call(this, thisNode.children)
+
+                            //设置自定义文件夹图标（收起与展开）
+                            if (folderIcon && folderIconOpen) {
+                                thisNode.iconClose = folderIcon;
+                                thisNode.iconOpen = folderIconOpen;
                             }
-                            //设置了自定义文件图标
-                            if (fileIcon) {
-                                treeNodes[i].icon = fileIcon;
-                            }
+                            continue;
                         }
-                    })(treeNodes)
-                }
+                        //设置了自定义文件图标
+                        if (fileIcon) {
+                            thisNode.icon = fileIcon;
+                        }
+                    }
+                })(this.treeNodes)
 
+            },
+            //通过已勾选节点触发onCheck事件来初始化selectedNodeList及selectedNodeListData
+            initSelectedNodeList: function() {
+                if (this.setting.selectable) {
+                    var allCheckedNodes = this.ztreeObj.getCheckedNodes();
+                    $.each(allCheckedNodes, function(i, node) {
+                        this.ztreeObj.checkNode(node, true, true, true);
+                    }.bind(this))
+                }
             },
             bind: function() {
                 this.bindSearch();
@@ -151,8 +160,6 @@
                 var _self = this;
                 this.ztreeObj.setting.callback.onCheck = function(e, id, node) {
                     // e.stopPropagation();
-                    var el = $(event.target),
-                        aEl = el.closest('li').find('>a');
                     if (node.checked) {
                         //选择包含所有子节点
                         if (_self.setting.selectContainChildren) {
@@ -162,14 +169,12 @@
                                 _self.ztreeObj.checkNode(node, false, false, false);
                             }
 
-                            //获取所有最底层的子节点
-
                             allChildrenNodes = _self.getAllChildrenNodes(node, _self.setting.selectContainSelf, _self.setting.selectOnlyChildren);
-
 
                             $.each(allChildrenNodes, function(i, node) {
                                 if (_self.selectedNodeList.indexOf(node) < 0) {
                                     _self.selectedNodeList.push(node);
+                                    _self.selectedListData.push(node.data);
                                 }
 
                                 //如果设置为选择时不包含自身节点并且不是只包含最底层子节点，手动将所有子节点checked置为true
@@ -181,7 +186,6 @@
 
                         } else {
                             _self.selectedNodeList.push(node);
-                            _self.selectedNodeListEl.push(aEl);
                             _self.selectedListData.push(node.data);
                         }
                     } else {
@@ -192,13 +196,13 @@
                                 var index = _self.selectedNodeList.indexOf(node); //匹配索引
                                 if (index >= 0) {
                                     _self.selectedNodeList.splice(index, 1);
+                                    _self.selectedListData.splice(index, 1);
                                 }
                             })
                         } else {
                             var index = _self.selectedNodeList.indexOf(node); //匹配索引
                             if (index >= 0) {
                                 _self.selectedNodeList.splice(index, 1);
-                                _self.selectedNodeListEl.splice(index, 1);
                                 _self.selectedListData.splice(index, 1);
                             }
                         }
@@ -228,7 +232,6 @@
                 $(document).on('click', '.slwyTree-remove-all', function(e) {
                     _self.ztreeObj.checkAllNodes(false);
                     _self.selectedNodeList = [];
-                    _self.selectedNodeListEl = [];
                     _self.selectorEl.selectedNodeListEl.html('');
                     _self.selectorEl.selectedTreeCountEl.text(0);
                 })
@@ -255,8 +258,7 @@
                     searchBoxIcon = $('<i class="slwyTree-searchbox-icon">');
                     searchBoxInput = $('<input type="search" id="zTreeSearch">');
                     searchBoxInput.attr('placeholder', this.setting.searchBoxText);
-                    searchBoxDiv.append(searchBoxIcon);
-                    searchBoxDiv.append(searchBoxInput);
+                    searchBoxDiv.append(searchBoxIcon).append(searchBoxInput);
                     zTreeDiv.before(searchBoxDiv);
                 }
                 if (this.setting.selectable) {
@@ -293,6 +295,7 @@
                 }
                 this.selector.html(slwyTreeDiv);
             },
+            //渲染已选择列表
             renderSelectedNodeList: function() {
                 var html = '';
                 for (var i = 0; i < this.selectedNodeList.length; i++) {
@@ -313,9 +316,11 @@
                 }
                 this.selectorEl.selectedNodeListEl.html(html);
             },
+            //更新已选择数量
             updateSelectedTreeCount: function() {
                 this.selectorEl.selectedTreeCountEl.text(this.selectedNodeList.length);
             },
+            //高亮节点
             highlightNode: function(highlight) {
                 var _self = this;
                 $.each(this.searchNodes, function(i, node) {
@@ -336,7 +341,7 @@
                 this.highlightNode(false);
                 if (!keyword) return false;
                 this.searchNodes = this.ztreeObj.getNodesByParamFuzzy('name', keyword); //搜索匹配节点
-                console.log(this.searchNodes);
+
                 this.highlightNode(true);
             },
             //显示隐藏搜索过滤
@@ -404,7 +409,14 @@
             }
         }
 
+        var slwyTreeObj = new SlwyTree($(this), setting, treeNodes);
 
-        return new SlwyTree($(this), setting, treeNodes);
+        if (slwyTreeObj.setting.selectable) {
+            $(this).__proto__.getSelectedListData = function() {
+                return slwyTreeObj.selectedListData;
+            }
+        }
+
+        return $(this);
     };
 });

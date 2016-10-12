@@ -72,6 +72,7 @@
                 }, {
                     "name": "test",
                     open: false,
+                    checked:true,
                     children: [{
                         "name": "123456",
                         data: {
@@ -92,11 +93,12 @@
                 "name": "技术中心",
                 open: true,
                 children: [{
-                    "name": "Web前端研发部"
+                    "name": "Web前端研发部",
+                    checked:true
                 }]
             }]
         }]
-        $('#slwyTree').SlwyTree(setting, treeNodes);
+        var selectedListData =$('#slwyTree').SlwyTree(setting, treeNodes).getSelectedListData();
         </script>
 </body>
 
