@@ -39,6 +39,7 @@
             this.searchFilter = [null, this.searchFilterHighlight, this.searchFilterShow]; //搜索Filter
             this.selectedNodeList = []; //已选择的节点列表
             this.selectedNodeListEl = []; //已选择的节点元素
+            this.selectedListData = []; //已选择的节点的绑定数据
             this.init();
         }
         SlwyTree.prototype = {
@@ -119,10 +120,12 @@
                     if (node.checked) {
                         _self.selectedNodeList.push(node);
                         _self.selectedNodeListEl.push(aEl);
+                        _self.selectedListData.push(node.data);
                     } else {
                         var index = _self.selectedNodeList.indexOf(node); //匹配索引
                         _self.selectedNodeList.splice(index, 1);
                         _self.selectedNodeListEl.splice(index, 1);
+                        _self.selectedListData.splice(index, 1);
                     }
                     _self.renderSelectedNodeList();
                     _self.updateSelectedTreeCount();
@@ -169,9 +172,9 @@
                 slwyTreeDiv.append(zTreeDiv);
                 if (this.setting.searchable) {
                     searchBoxDiv = $('<div class="slwyTree-searchbox">');
-                    searchBoxIcon=$('<i class="slwyTree-searchbox-icon">');
-                    searchBoxInput=$('<input type="search" id="zTreeSearch">');
-                    searchBoxInput.attr('placeholder',this.setting.searchBoxText);
+                    searchBoxIcon = $('<i class="slwyTree-searchbox-icon">');
+                    searchBoxInput = $('<input type="search" id="zTreeSearch">');
+                    searchBoxInput.attr('placeholder', this.setting.searchBoxText);
                     searchBoxDiv.append(searchBoxIcon);
                     searchBoxDiv.append(searchBoxInput);
                     zTreeDiv.before(searchBoxDiv);
@@ -242,6 +245,7 @@
                 this.highlightNode(false);
                 if (!keyword) return false;
                 this.searchNodes = this.ztreeObj.getNodesByParamFuzzy('name', keyword); //搜索匹配节点
+                console.log(this.searchNodes);
                 this.highlightNode(true);
             },
             //显示隐藏搜索过滤
