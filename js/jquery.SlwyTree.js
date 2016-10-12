@@ -118,9 +118,20 @@
                     var el = $(event.target),
                         aEl = el.closest('li').find('>a');
                     if (node.checked) {
-                        _self.selectedNodeList.push(node);
-                        _self.selectedNodeListEl.push(aEl);
-                        _self.selectedListData.push(node.data);
+                        //选择包含所有子节点
+                        if (_self.setting.selectContainChildren) {
+                            //获取所有最底层的子节点
+                            var allChildrenNodes = _self.getAllChildrenNodes(node, false, true);
+                            // var allChildrenNodesEl = _self.getAllChildrenNodesEl(node, false, true);
+                            $.each(allChildrenNodes, function(i, node) {
+                                _self.selectedNodeList.push(node);
+                            })
+                            console.log(_self.selectedNodeList)
+                        } else {
+                            _self.selectedNodeList.push(node);
+                            _self.selectedNodeListEl.push(aEl);
+                            _self.selectedListData.push(node.data);
+                        }
                     } else {
                         var index = _self.selectedNodeList.indexOf(node); //匹配索引
                         _self.selectedNodeList.splice(index, 1);
@@ -214,11 +225,22 @@
                 this.selector.html(slwyTreeDiv);
             },
             renderSelectedNodeList: function() {
-
                 var html = '';
                 for (var i = 0; i < this.selectedNodeList.length; i++) {
-                    var aHtml = $('<li>').append(this.selectedNodeListEl[i].removeClass('curSelectedNode').clone()).html();
-                    html += '<li data-tid="' + this.selectedNodeList[i].tId + '">' + aHtml + '<a href="javascript:;" class="slwyTree-remove fr">刪除</a></li>';
+                    var thisNode=this.selectedNodeList[i],
+                        li=$('<li>').attr('data-tid',thisNode.tId),
+                        a=$('<a id="'+thisNode.tId+'_a" treenode_a>'),
+                        icoSpan=$('<span id="'+thisNode.tId+'_ico" treenode_ico class="button">'),
+                        nameSpan=$('<span id="'+thisNode.tId+'_span" class="node_name">').text(thisNode.name),
+                        removeA=$('<a href="javascript:;" class="slwyTree-remove fr">').text('删除');
+
+                    if(thisNode.children){
+                        icoSpan.addClass('ico_open');
+                    }else{
+                        icoSpan.addClass('ico_docu');
+                    }
+
+                    html+=li.html(a.append(icoSpan).append(nameSpan).append(removeA))[0].outerHTML;
                 }
                 this.selectorEl.selectedNodeListEl.html(html);
             },
@@ -270,8 +292,49 @@
                         }
                     }.bind(this))(node)
                 }.bind(this));
+            },
+            //获取所有子节点
+            getAllChildrenNodes: function(node, isContainSelf, isOnlyChild) {
+                var children = [];
+                isContainSelf = isContainSelf || false; //是否包含自己
+                isOnlyChild = isOnlyChild || false; //是否只包含最底层的子节点
+                (function(thisNode) {
+                    if (!thisNode.children) {
+                        children.push(thisNode);
+                        return false;
+                    }
+                    if (thisNode.children.length) {
+                        for (var i = 0; i < thisNode.children.length; i++) {
+                            arguments.callee.call(this, thisNode.children[i]);
+                        }
+
+                        //是否只包含最底层的子节点
+                        if (isOnlyChild) {
+                            if (!thisNode.children) {
+                                children.push(thisNode);
+                            }
+                            //是否包含自己
+                            if (isContainSelf) {
+                                if (thisNode == node) {
+                                    children.push(thisNode);
+                                }
+                            }
+                        } else {
+                            //是否包含自己
+                            if (isContainSelf) {
+                                children.push(thisNode);
+                            } else {
+                                if (thisNode != node) {
+                                    children.push(thisNode);
+                                }
+                            }
+                        }
+                    }
+                })(node);
+                return children;
             }
         }
+
 
         return new SlwyTree($(this), setting, treeNodes);
     };

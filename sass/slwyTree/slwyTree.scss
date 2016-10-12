@@ -44,6 +44,20 @@
         font-size: inherit!important;
         font-family: inherit!important;
     }
+    a {
+        color: #2f77e3;
+        font-size: inherit;
+        text-decoration: none!important;
+        &:hover {
+            text-decoration: none!important;
+        }
+        &:active {
+            text-decoration: none!important;
+        }
+        &:visited {
+            text-decoration: none!important;
+        }
+    }
     .slwyTree-selectBox {
         margin-top: -6px;
         .slwyTree-selected-list {
@@ -62,25 +76,12 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
+                    color: #333;
                 }
             }
         }
         .ztree .node_name {
             margin-left: 5px;
-        }
-    }
-    a {
-        color: #2f77e3;
-        font-size: inherit;
-        text-decoration: none!important;
-        &:hover {
-            text-decoration: none!important;
-        }
-        &:active {
-            text-decoration: none!important;
-        }
-        &:visited {
-            text-decoration: none!important;
         }
     }
     .slwyTree-title {
