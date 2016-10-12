@@ -1,0 +1,122 @@
+.slwyTree {
+    font-family: 'Microsoft Yahei';
+    height: 100%;
+    padding: 14px;
+    overflow: auto;
+    .slwyTree-searchbox {
+        width: 100%;
+        position: relative;
+        .slwyTree-searchbox-icon {
+            background-image: url("./img/slwyTree-style.png");
+            background-position: -80px 0;
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            left: 7px;
+            top: 7px;
+        }
+        input[type=search] {
+            border-radius: 2px;
+            padding: 6px 6px 6px 25px;
+            border: 1px solid #ccc;
+            width: 100%;
+            height: 30px;
+        }
+        .icon-search {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            left: 6px;
+            top: 6px;
+            font-size: 18px;
+            color: #aaa;
+        }
+    }
+    .ztree {
+        overflow: hidden;
+        margin-left: -10px;
+        li {
+            padding: 2px 0;
+        }
+    }
+    .ztree * {
+        font-size: inherit!important;
+        font-family: inherit!important;
+    }
+    .slwyTree-selectBox {
+        margin-top: -6px;
+        .slwyTree-selected-list {
+            li {
+                padding: 10px 0;
+                border-bottom: 1px solid #e6e6e6;
+                &:hover {
+                    background-color: #f0f8fd;
+                }
+                a {
+                    color: #2f77e3;
+                }
+                a[treenode_a] {
+                    max-width: 84%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+        }
+        .ztree .node_name {
+            margin-left: 5px;
+        }
+    }
+    a {
+        color: #2f77e3;
+        font-size: inherit;
+        text-decoration: none!important;
+        &:hover {
+            text-decoration: none!important;
+        }
+        &:active {
+            text-decoration: none!important;
+        }
+        &:visited {
+            text-decoration: none!important;
+        }
+    }
+    .slwyTree-title {
+        padding: 10px 0;
+        font-weight: bold;
+        font-size: 15px;
+        border-bottom: 1px solid #e6e6e6;
+    }
+}
+
+.slwyTree.slwy-style,
+.slwyTree.slwy-switch-arrow {
+    .ztree li span.switch {
+        background-image: url("./img/slwyTree-style.png");
+    }
+    .ztree li span.switch.noline_docu {
+        background: none;
+    }
+    .ztree li span.switch.noline_open {
+        background-position: -64px 0;
+    }
+    .ztree li span.switch.noline_close {
+        background-position: -48px 0;
+    }
+}
+
+.slwyTree.slwy-style {
+    .ztree li span[treenode_ico] {
+        background-image: url("./img/slwyTree-style.png");
+    }
+    .ztree li span[treenode_ico].ico_docu {
+        background-position: -32px 0;
+    }
+    .ztree li span[treenode_ico].ico_close {
+        background-position: 0 0;
+    }
+    .ztree li span[treenode_ico].ico_open {
+        background-position: -16px 0;
+    }
+}
