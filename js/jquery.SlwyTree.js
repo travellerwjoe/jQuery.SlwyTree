@@ -66,6 +66,11 @@
                             }
                         }).call(this)
                     },
+                    data:{
+                        simpleData:{
+                            enable:true
+                        }
+                    },
                     callback: {
 
                     }
@@ -406,14 +411,26 @@
                     }
                 })(node);
                 return children;
-            }
+            },
+            destroy:function(){
+                this.ztreeObj.destroy();
+            },
         }
 
         var slwyTreeObj = new SlwyTree($(this), setting, treeNodes);
 
         if (slwyTreeObj.setting.selectable) {
-            $(this).__proto__.getSelectedListData = function() {
-                return slwyTreeObj.selectedListData;
+            $(this).__proto__.getSelectedListData = function(callback) {
+                if(typeof callback=='function'){
+                    callback(slwyTreeObj.selectedListData);
+                    return $(this);
+                }else{
+                    return slwyTreeObj.selectedListData;
+                }
+            }
+            $(this).__proto__.destroyTree=function(){
+                slwyTreeObj.destroy();
+                return $(this);
             }
         }
 

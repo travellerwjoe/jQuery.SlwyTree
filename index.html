@@ -56,49 +56,71 @@
             searchBoxText: '搜索成员名称', //搜索框placeholder文案
         };
         var treeNodes = [{
-            "name": "四川我要去哪儿科技股份有限公司",
+            name: "四川我要去哪儿科技股份有限公司",
+            open:true,
+            id:1
+        },{
+            name: "差旅平台事业部",
             open: true,
-            children: [{
-                "name": "差旅平台事业部",
-                open: true,
-                children: [{
-                    "name": "国内机票组"
-                }, {
-                    "name": "增值业务组"
-                }, {
-                    "name": "差旅产品组"
-                }, {
-                    "name": "差旅测试部"
-                }, {
-                    "name": "test",
-                    open: false,
-                    checked:true,
-                    children: [{
-                        "name": "123456",
-                        data: {
-                            'a': 1,
-                            'b': 2
-                        }
-                    }]
-                }]
-            }, {
-                "name": "人力行政中心",
-                open: true,
-                children: [{
-                    "name": "人力资源部"
-                }, {
-                    "name": "后勤部"
-                }]
-            }, {
-                "name": "技术中心",
-                open: true,
-                children: [{
-                    "name": "Web前端研发部",
-                    checked:true
-                }]
-            }]
-        }]
-        var selectedListData =$('#slwyTree').SlwyTree(setting, treeNodes).getSelectedListData();
+            pId:1,
+            id:2
+        },{
+            name: "人力行政中心",
+            open: true,
+            pId:1,
+            id:3
+        },{
+            name: "技术中心",
+            open: true,
+            pId:1,
+            id:4
+        },{
+            name: "国内机票组",
+            pId:2,
+            id:5
+        },{
+            name: "增值业务组",
+            pId :2,
+            id:6
+        },{
+            name: "差旅产品组",
+            pId :2,
+            id:7
+        },{
+            name: "差旅测试部",
+            pId :2,
+            id:8
+        },{
+             name: "test",
+             open:false,
+             checked:true,
+             pId:2,
+             id:9
+        },{
+            name: "人力资源部",
+            pId :3,
+            id:10
+        },{
+            name: "后勤部",
+            pId :3,
+            id:11
+        },{
+            name: "Web前端研发部",
+            checked :true,
+            pId:4,
+            id:12
+        },{
+            name: "123456",
+            data: { 'a': 1,'b': 2},
+            pId :9,
+            id:13
+        }];
+        $('#slwyTree').SlwyTree(setting, treeNodes);
+        $('#slwyTree').getSelectedListData(function(data){
+            console.log(data);
+        });
+        var selectedListData=$('#slwyTree').getSelectedListData();
+        console.log(selectedListData);
         </script>
 </body>
 
