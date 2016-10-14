@@ -39,42 +39,43 @@
             //如果父级节点只选择最底层子节点，selectContainSelf无论是否设置都为false
             this.setting.selectContainSelf = this.setting.selectOnlyChildren ? false : this.setting.selectContainSelf;
             this.zTreeSetting = {
-                    view: {
-                        showLine: false,
-                        showIcon: this.setting.showIcon === false ? false : true,
-                        fontCss: function(treeId, treeNode) {
-                            return (!!treeNode.highlight) ? { color: "#ff6706", "font-weight": "bold" } : { color: "#333", "font-weight": "normal" };
-                        }
-                    },
-                    check: {
-                        enable: this.setting.checkable || false,
-                        chkboxType: (function() {
-                            if (this.setting.selectContainChildren) {
-                                if (this.setting.selectContainSelf) {
-                                    //checkbox勾选操作会影响子级节点
-                                    return { "Y": "s", "N": "s" };
-                                } else if (this.setting.selectOnlyChildren) {
-                                    //checkbox勾选操作会影响父子级节点
-                                    return { "Y": "ps", "N": "ps" };
-                                } else {
-                                    //checkbox勾选操作会影响子级节点
-                                    return { "Y": "s", "N": "s" };
-                                }
-                            } else {
-                                //checkbox勾选操作不会影响其他节点
-                                return { "Y": "", "N": "" };
-                            }
-                        }).call(this)
-                    },
-                    data:{
-                        simpleData:{
-                            enable:true
-                        }
-                    },
-                    callback: {
-
+                view: {
+                    showLine: false,
+                    showIcon: this.setting.showIcon === false ? false : true,
+                    fontCss: function(treeId, treeNode) {
+                        return (!!treeNode.highlight) ? { color: "#ff6706", "font-weight": "bold" } : { color: "#333", "font-weight": "normal" };
                     }
-                } //zTree基础设置
+                },
+                check: {
+                    enable: this.setting.checkable || false,
+                    chkboxType: (function() {
+                        if (this.setting.selectContainChildren) {
+                            if (this.setting.selectContainSelf) {
+                                //checkbox勾选操作会影响子级节点
+                                return { "Y": "s", "N": "s" };
+                            } else if (this.setting.selectOnlyChildren) {
+                                //checkbox勾选操作会影响父子级节点
+                                return { "Y": "ps", "N": "ps" };
+                            } else {
+                                //checkbox勾选操作会影响子级节点
+                                return { "Y": "s", "N": "s" };
+                            }
+                        } else {
+                            //checkbox勾选操作不会影响其他节点
+                            return { "Y": "", "N": "" };
+                        }
+                    }).call(this)
+                },
+                data: {
+                    simpleData: {
+                        enable: true
+                    }
+                },
+                callback: {
+
+                }
+            }; //zTree基础设置
+            $.extend(this.zTreeSetting.data, this.setting.customData);
             this.treeNodes = treeNodes;
             this.searchNodes = []; //搜索匹配节点,默认空
             this.searchFilter = [null, this.searchFilterHighlight, this.searchFilterShow]; //搜索Filter
@@ -139,7 +140,7 @@
             },
             //通过已勾选节点触发onCheck事件来初始化selectedNodeList及selectedNodeListData
             initSelectedNodeList: function() {
-                if (this.setting.selectable) {
+                if (this.setting.checkable) {
                     var allCheckedNodes = this.ztreeObj.getCheckedNodes();
                     $.each(allCheckedNodes, function(i, node) {
                         this.ztreeObj.checkNode(node, true, true, true);
@@ -237,6 +238,7 @@
                 $(document).on('click', '.slwyTree-remove-all', function(e) {
                     _self.ztreeObj.checkAllNodes(false);
                     _self.selectedNodeList = [];
+                    _self.selectedListData = [];
                     _self.selectorEl.selectedNodeListEl.html('');
                     _self.selectorEl.selectedTreeCountEl.text(0);
                 })
@@ -308,10 +310,10 @@
                         li = $('<li>').attr('data-tid', thisNode.tId),
                         a = $('<a id="' + thisNode.tId + '_a" treenode_a>'),
                         icoSpan = $('<span id="' + thisNode.tId + '_ico" treenode_ico class="button">'),
-                        nameSpan = $('<span id="' + thisNode.tId + '_span" class="node_name">').text(thisNode.name),
+                        nameSpan = $('<span id="' + thisNode.tId + '_span" class="node_name">').text(thisNode[this.zTreeSetting.data.key ? this.zTreeSetting.data.key.name : 'name']),
                         removeA = $('<a href="javascript:;" class="slwyTree-remove fr">').text('删除');
 
-                    if (thisNode.children) {
+                    if (thisNode.isParent) {
                         icoSpan.addClass('ico_open');
                     } else {
                         icoSpan.addClass('ico_docu');
@@ -379,7 +381,10 @@
                 isOnlyChild = isOnlyChild || false; //是否只包含最底层的子节点
                 (function(thisNode) {
                     if (!thisNode.children) {
-                        children.push(thisNode);
+                        //如果不包含最底层子节点或者只包含最底层节点但并不是父节点
+                        if (!isOnlyChild || isOnlyChild && !thisNode.isParent) {
+                            children.push(thisNode);
+                        }
                         return false;
                     }
                     if (thisNode.children.length) {
@@ -412,23 +417,23 @@
                 })(node);
                 return children;
             },
-            destroy:function(){
+            destroy: function() {
                 this.ztreeObj.destroy();
             },
         }
 
         var slwyTreeObj = new SlwyTree($(this), setting, treeNodes);
 
-        if (slwyTreeObj.setting.selectable) {
+        if (slwyTreeObj.setting.checkable) {
             $(this).__proto__.getSelectedListData = function(callback) {
-                if(typeof callback=='function'){
+                if (typeof callback == 'function') {
                     callback(slwyTreeObj.selectedListData);
                     return $(this);
-                }else{
+                } else {
                     return slwyTreeObj.selectedListData;
                 }
             }
-            $(this).__proto__.destroyTree=function(){
+            $(this).__proto__.destroyTree = function() {
                 slwyTreeObj.destroy();
                 return $(this);
             }

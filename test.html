@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+    var treeNodes = [{
+        name: "四川我要去哪儿科技股份有限公司",
+        open: true,
+        pId:0,
+        id: 1
+    }, {
+        name: "差旅平台事业部",
+        open: true,
+        pId: 1,
+        id: 2
+    }, {
+        name: "人力行政中心",
+        open: true,
+        pId: 1,
+        id: 3
+    }, {
+        name: "技术中心",
+        open: true,
+        pId: 1,
+        id: 4
+    }, {
+        name: "国内机票组",
+        pId: 2,
+        id: 5
+    }, {
+        name: "增值业务组",
+        pId: 2,
+        id: 6
+    }, {
+        name: "差旅产品组",
+        pId: 2,
+        id: 7
+    }, {
+        name: "差旅测试部",
+        pId: 2,
+        id: 8
+    }, {
+        name: "test",
+        open: false,
+        checked: true,
+        pId: 2,
+        id: 9
+    }, {
+        name: "人力资源部",
+        pId: 3,
+        id: 10
+    }, {
+        name: "后勤部",
+        pId: 3,
+        id: 11
+    }, {
+        name: "Web前端研发部",
+        checked: true,
+        pId: 4,
+        id: 12
+    }, {
+        name: "123456",
+        data: {
+            'a': 1,
+            'b': 2
+        },
+        pId: 9,
+        id: 13
+    }];
+
+    var level1=[],
+    	level2=[],
+    	level3=[],
+    	level4=[];
+
+
+    function _findChildren(list, p_id){    //数据层级化，
+          var r = [];
+          // foreach(list as $id=>$item){
+          list.forEach(function(item,i){
+            if(item.pId == p_id) {
+                  var length = r.length;
+                  r[length] = item;
+                  var t=_findChildren(list, item.id)
+                  if(t.length){
+                      r[length]['children'] = t;
+                  }                
+            }
+          });
+          return r;
+    } 
+
+    console.log(_findChildren(treeNodes,0));
+    </script>
+</body>
+
+</html>

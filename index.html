@@ -53,7 +53,18 @@
             // iconSwitchStyle:'arrow',//switch图标风格，目前支持arrow箭头和默认加减两种风格
             selectBoxTitleText: '已选择成员', //选择列表容器标题文案，默认为"已选择",
             selectBoxTitleSymbol: '人', //选择列表容器已选择的数量单位，默认无
-            searchBoxText: '搜索成员名称', //搜索框placeholder文案
+            searchBoxText: '搜索成员名称', //搜索框placeholder文案,
+            /*customData:{
+                key:{
+                    children:'ChildrenNode',
+                    name:'Name'
+                },
+                simpleData:{
+                    enable:true,
+                    idKey:'ID',
+                    pIdKey:'PID'
+                }
+            }*/
         };
         var treeNodes = [{
             name: "四川我要去哪儿科技股份有限公司",
@@ -73,7 +84,8 @@
             name: "技术中心",
             open: true,
             pId:1,
-            id:4
+            id:4,
+            isParent:true
         },{
             name: "国内机票组",
             pId:2,
@@ -104,21 +116,23 @@
             name: "后勤部",
             pId :3,
             id:11
-        },{
+        },/*{
             name: "Web前端研发部",
             checked :true,
             pId:4,
             id:12
-        },{
+        },*/{
             name: "123456",
             data: { 'a': 1,'b': 2},
             pId :9,
             id:13
         }];
         $('#slwyTree').SlwyTree(setting, treeNodes);
+        //异步获取selectedListData
         $('#slwyTree').getSelectedListData(function(data){
             console.log(data);
         });
+        //同步获取selectedListData
         var selectedListData=$('#slwyTree').getSelectedListData();
         console.log(selectedListData);
         </script>
