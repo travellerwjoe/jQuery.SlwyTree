@@ -12,9 +12,8 @@
         factory(jQuery);
     }
 })(function($, zTree) {
-    $.fn.SlwyTree = function(setting, treeNodes) {
-
-        function SlwyTree(selector, setting, treeNodes) {
+    $.fn.SlwyTree = function(treeNodes, setting) {
+        function SlwyTree(selector, treeNodes, setting) {
             var defaults = {
                 searchable: false, //是否可搜索,默认false
                 searchType: 1, //1||2,搜索过滤方式,1搜索高亮显示,2搜索过滤显示,默认1
@@ -34,8 +33,9 @@
                 selectBoxTitleSymbol: null, //选择列表容器已选择的数量单位，默认无
                 searchBoxText: '搜索', //搜索框placeholder文案
             };
+            $.extend(true, defaults, selector.data());
             this.selector = selector;
-            this.setting = $.extend(defaults, setting);
+            this.setting = $.extend(true, defaults, setting);
             //如果父级节点只选择最底层子节点，selectContainSelf无论是否设置都为false
             this.setting.selectContainSelf = this.setting.selectOnlyChildren ? false : this.setting.selectContainSelf;
             this.zTreeSetting = {
@@ -75,7 +75,8 @@
 
                 }
             }; //zTree基础设置
-            $.extend(this.zTreeSetting.data, this.setting.customData);
+            $.extend(true, this.zTreeSetting.data, this.setting.customData);
+            console.log(this.setting);
             this.treeNodes = treeNodes;
             this.searchNodes = []; //搜索匹配节点,默认空
             this.searchFilter = [null, this.searchFilterHighlight, this.searchFilterShow]; //搜索Filter
@@ -422,7 +423,7 @@
             },
         }
 
-        var slwyTreeObj = new SlwyTree($(this), setting, treeNodes);
+        var slwyTreeObj = new SlwyTree($(this), treeNodes, setting);
 
         if (slwyTreeObj.setting.checkable) {
             $(this).__proto__.getSelectedListData = function(callback) {
