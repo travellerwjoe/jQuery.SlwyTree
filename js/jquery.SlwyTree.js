@@ -31,7 +31,8 @@
                 iconSwitchStyle: 'default', //switch图标风格，目前支持arrow箭头和默认加减两种风格
                 selectBoxTitleText: '已选择', //选择列表容器标题文案，默认为"已选择",
                 selectBoxTitleSymbol: null, //选择列表容器已选择的数量单位，默认无
-                searchBoxText: '搜索', //搜索框placeholder文案
+                searchBoxText: '搜索', //搜索框placeholder文案,
+                expandLevel: 0, //节点展开等级，默认0不展开节点
             };
             $.extend(true, defaults, selector.data());
             this.selector = selector;
@@ -118,25 +119,41 @@
 
 
                 ///遍历节点树并加上自定义图标
-                (function(treeNodes) {
-                    for (var i = 0; i < treeNodes.length; i++) {
-                        var thisNode = treeNodes[i];
-                        if (thisNode.children) {
-                            arguments.callee.call(this, thisNode.children)
+                if (fileIcon || folderIcon && folderIconOpen) {
+                    (function(treeNodes) {
+                        for (var i = 0; i < treeNodes.length; i++) {
+                            var thisNode = treeNodes[i];
+                            if (thisNode.children) {
+                                arguments.callee.call(this, thisNode.children)
 
-                            //设置自定义文件夹图标（收起与展开）
-                            if (folderIcon && folderIconOpen) {
-                                thisNode.iconClose = folderIcon;
-                                thisNode.iconOpen = folderIconOpen;
+                                //设置自定义文件夹图标（收起与展开）
+                                if (folderIcon && folderIconOpen) {
+                                    thisNode.iconClose = folderIcon;
+                                    thisNode.iconOpen = folderIconOpen;
+                                }
+                                continue;
                             }
-                            continue;
+                            //设置了自定义文件图标
+                            if (fileIcon) {
+                                thisNode.icon = fileIcon;
+                            }
                         }
-                        //设置了自定义文件图标
-                        if (fileIcon) {
-                            thisNode.icon = fileIcon;
-                        }
-                    }
-                })(this.treeNodes)
+                    })(this.treeNodes)
+                }
+
+                //设置了展开等级
+                var expandLevel = this.setting.expandLevel;
+                if (parseInt(this.setting.expandLevel) > 0) {
+                    this.treeNodes = this.formatDataByExpandLevel(this.treeNodes, this.setting.expandLevel).data;
+                } else if (parseInt(this.setting.expandLevel) == 0) {
+                    $.each(this.treeNodes, function(i, node) {
+                        node.open = true;
+                    });
+                } else if (parseInt(this.setting.expandLevel) == -1) {
+                    $.each(this.treeNodes, function(i, node) {
+                        node.open = false;
+                    })
+                }
 
             },
             //通过已勾选节点触发onCheck事件来初始化selectedNodeList及selectedNodeListData
@@ -418,6 +435,74 @@
                 })(node);
                 return children;
             },
+            //根据设定的expandLevel给数据添加open展开属性并返回格式化为树形结构的数据和未格式化的数据
+            formatDataByExpandLevel: function(data, expandLevel) {
+                var level = 0,
+                    formatData = _findChildren(data);
+                //层级化数据并设置open属性
+                function _findChildren(list, p_id) {
+                    var r = [];
+                    p_id = p_id != undefined ? p_id : undefined;
+                    level++;
+                    list.forEach(function(item, i) {
+                        if (item.pId == p_id) {
+                            if (level <= expandLevel) {
+                                item.open = true;
+                            }
+                            var length = r.length;
+                            console.log(item);
+                            r[length] = $.extend({}, item);
+                            var t = _findChildren(list, item.id);
+                            if (t.length) {
+                                r[length].children = t;
+                            }
+                        }
+                    });
+                    level--;
+                    return r;
+                }
+                return {
+                    data: data,
+                    formatData: formatData
+                };
+            },
+            //将数据格式化为树级结构
+            /*formatDataToTreenodes: function(list, p_id) {
+                var r = [];
+                p_id = p_id != undefined ? p_id : undefined;
+                $.each(list, function(item, i) {
+                    if (item.pId == p_id) {
+                        var length = r.length;
+                        r[length] = item;
+                        var t = _findChildren(list, item.id)
+                        if (t.length) {
+                            r[length]['children'] = t;
+                        }
+                    }
+                });
+                return r;
+            },*/
+            //根据设定的expandLevel给格式化后的树形结构数据添加open展开属性
+            /*setExpandByExpandLevel: function(expandLevel) {
+                var level = 0;
+                treeNodes.forEach(function(node, i) {
+                    (function(node) {
+                        var hasChildren = !!node.children;
+                        level++;
+                        if (!hasChildren) {
+                            level--;
+                            return false;
+                        }
+                        if (level <= 4) {
+                            node.open = true;
+                        }
+                        for (var i = 0; i < node.children.length; i++) {
+                            arguments.callee.call(this, node.children[i]);
+                        }
+                        level--;
+                    })(node)
+                })
+            },*/
             destroy: function() {
                 this.ztreeObj.destroy();
             },

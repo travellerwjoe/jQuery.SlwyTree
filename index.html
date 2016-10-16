@@ -54,6 +54,7 @@
             selectBoxTitleText: '已选择成员', //选择列表容器标题文案，默认为"已选择",
             selectBoxTitleSymbol: '人', //选择列表容器已选择的数量单位，默认无
             searchBoxText: '搜索成员名称', //搜索框placeholder文案,
+            expandLevel: 2, //节点展开等级，默认0全部展开，-1不展开
             // customData:{
             //     key:{
             //         children:'ChildrenNode',
@@ -67,72 +68,83 @@
         };
         var treeNodes = [{
             name: "四川我要去哪儿科技股份有限公司",
-            open:true,
-            id:1
-        },{
+            id: 1
+        }, {
             name: "差旅平台事业部",
-            open: true,
-            pId:1,
-            id:2
-        },{
+            pId: 1,
+            id: 2
+        }, {
             name: "人力行政中心",
-            open: true,
-            pId:1,
-            id:3
-        },{
+            pId: 1,
+            id: 3
+        }, {
             name: "技术中心",
-            open: true,
-            pId:1,
-            id:4,
-            isParent:true
-        },{
+            pId: 1,
+            id: 4,
+            isParent: true
+        }, {
             name: "国内机票组",
-            pId:2,
-            id:5
-        },{
+            pId: 2,
+            id: 5
+        }, {
             name: "增值业务组",
-            pId :2,
-            id:6
-        },{
+            pId: 2,
+            id: 6
+        }, {
             name: "差旅产品组",
-            pId :2,
-            id:7
-        },{
+            pId: 2,
+            id: 7
+        }, {
             name: "差旅测试部",
-            pId :2,
-            id:8
-        },{
-             name: "test",
-             open:false,
-             checked:true,
-             pId:2,
-             id:9
-        },{
+            pId: 2,
+            id: 8
+        }, {
+            name: "test",
+            open: false,
+            checked: true,
+            pId: 2,
+            id: 9
+        }, {
             name: "人力资源部",
-            pId :3,
-            id:10
-        },{
+            pId: 3,
+            id: 10
+        }, {
             name: "后勤部",
-            pId :3,
-            id:11
-        },/*{
+            pId: 3,
+            id: 11
+        }, {
             name: "Web前端研发部",
-            checked :true,
-            pId:4,
-            id:12
-        },*/{
+            checked: true,
+            pId: 4,
+            id: 12
+        }, {
             name: "123456",
-            data: { 'a': 1,'b': 2},
-            pId :9,
-            id:13
+            data: {
+                'a': 1,
+                'b': 2
+            },
+            pId: 9,
+            id: 13
+        }, {
+            name: 'joe',
+            pId: 12,
+            id: 14
+        }, {
+            name: '前端酒店开发组',
+            pId: 12,
+            id: 15
+        }, {
+            name: 'haha',
+            pId: 15,
+            id: 16
         }];
-        $('#slwyTree').SlwyTree(treeNodes , setting);
+        $('#slwyTree').SlwyTree(treeNodes, setting);
         //异步获取selectedListData
-        $('#slwyTree').getSelectedListData(function(data){
+        $('#slwyTree').getSelectedListData(function(data) {
             console.log(data);
         });
         //同步获取selectedListData
-        var selectedListData=$('#slwyTree').getSelectedListData();
+        var selectedListData = $('#slwyTree').getSelectedListData();
         console.log(selectedListData);
         </script>
 </body>
