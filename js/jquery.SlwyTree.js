@@ -69,7 +69,9 @@
                 },
                 data: {
                     simpleData: {
-                        enable: true
+                        enable: true,
+                        idKey:'id',
+                        pIdKey:'pId'
                     }
                 },
                 callback: {
@@ -77,7 +79,6 @@
                 }
             }; //zTree基础设置
             $.extend(true, this.zTreeSetting.data, this.setting.customData);
-            console.log(this.setting);
             this.treeNodes = treeNodes;
             this.searchNodes = []; //搜索匹配节点,默认空
             this.searchFilter = [null, this.searchFilterHighlight, this.searchFilterShow]; //搜索Filter
@@ -328,7 +329,7 @@
                         li = $('<li>').attr('data-tid', thisNode.tId),
                         a = $('<a id="' + thisNode.tId + '_a" treenode_a>'),
                         icoSpan = $('<span id="' + thisNode.tId + '_ico" treenode_ico class="button">'),
-                        nameSpan = $('<span id="' + thisNode.tId + '_span" class="node_name">').text(thisNode[this.zTreeSetting.data.key ? this.zTreeSetting.data.key.name : 'name']),
+                        nameSpan = $('<span id="' + thisNode.tId + '_span" class="node_name">').text(thisNode[this.ztreeObj.setting.data.key.name]),
                         removeA = $('<a href="javascript:;" class="slwyTree-remove fr">').text('删除');
 
                     if (thisNode.isParent) {
@@ -438,21 +439,22 @@
             //根据设定的expandLevel给数据添加open展开属性并返回格式化为树形结构的数据和未格式化的数据
             formatDataByExpandLevel: function(data, expandLevel) {
                 var level = 0,
+                    id = this.zTreeSetting.data.simpleData.idKey,
+                    pId = this.zTreeSetting.data.simpleData.pIdKey,
                     formatData = _findChildren(data);
                 //层级化数据并设置open属性
                 function _findChildren(list, p_id) {
                     var r = [];
                     p_id = p_id != undefined ? p_id : undefined;
                     level++;
-                    list.forEach(function(item, i) {
-                        if (item.pId == p_id) {
+                    $.each(list, function(i, item) {
+                        if (item[pId] == p_id) {
                             if (level <= expandLevel) {
                                 item.open = true;
                             }
                             var length = r.length;
-                            console.log(item);
                             r[length] = $.extend({}, item);
-                            var t = _findChildren(list, item.id);
+                            var t = _findChildren(list, item[id]);
                             if (t.length) {
                                 r[length].children = t;
                             }
@@ -468,15 +470,17 @@
             },
             //将数据格式化为树级结构
             /*formatDataToTreenodes: function(list, p_id) {
-                var r = [];
+                var r = [],
+                    id = this.zTreeSetting.data.simpleData.idKey,
+                    pId = this.zTreeSetting.data.simpleData.pIdKey;
                 p_id = p_id != undefined ? p_id : undefined;
-                $.each(list, function(item, i) {
-                    if (item.pId == p_id) {
+                $.each(list, function(i, item) {
+                    if (item[pId] == p_id) {
                         var length = r.length;
                         r[length] = item;
-                        var t = _findChildren(list, item.id)
+                        var t = _findChildren(list, item[id])
                         if (t.length) {
-                            r[length]['children'] = t;
+                            r[length].children = t;
                         }
                     }
                 });
