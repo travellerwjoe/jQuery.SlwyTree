@@ -104,45 +104,43 @@
             },
             //对节点数据改造
             initTreeNodes: function () {
-                //showIcon为false不用再设置自定义图标
-                if (!this.setting.showIcon) {
-                    return false;
-                }
+                //当showIcon为true才设置自定义图标
+                if (this.setting.showIcon) {
+                    if (typeof this.setting.fileIcon === "string") {
+                        var fileIcon = this.setting.fileIcon; //自定义文件图标
+                    }
 
-                if (typeof this.setting.fileIcon === "string") {
-                    var fileIcon = this.setting.fileIcon; //自定义文件图标
-                }
-
-                if (typeof this.setting.folderIcon === "string" && typeof this.setting.folderIconOpen) {
-                    var folderIcon = this.setting.folderIcon; //自定义文件夹（收起）图标
-                    var folderIconOpen = this.setting.folderIconOpen; //自定义文件夹（展开）图标
-                }
+                    if (typeof this.setting.folderIcon === "string" && typeof this.setting.folderIconOpen) {
+                        var folderIcon = this.setting.folderIcon; //自定义文件夹（收起）图标
+                        var folderIconOpen = this.setting.folderIconOpen; //自定义文件夹（展开）图标
+                    }
 
 
-                ///遍历节点树并加上自定义图标
-                if (fileIcon || folderIcon && folderIconOpen) {
-                    (function (treeNodes) {
-                        for (var i = 0; i < treeNodes.length; i++) {
-                            var thisNode = treeNodes[i];
-                            if (thisNode.children) {
-                                arguments.callee.call(this, thisNode.children)
+                    ///遍历节点树并加上自定义图标
+                    if (fileIcon || folderIcon && folderIconOpen) {
+                        (function (treeNodes) {
+                            for (var i = 0; i < treeNodes.length; i++) {
+                                var thisNode = treeNodes[i];
+                                if (thisNode.children) {
+                                    arguments.callee.call(this, thisNode.children)
 
-                                //设置自定义文件夹图标（收起与展开）
-                                if (folderIcon && folderIconOpen) {
-                                    thisNode.iconClose = folderIcon;
-                                    thisNode.iconOpen = folderIconOpen;
+                                    //设置自定义文件夹图标（收起与展开）
+                                    if (folderIcon && folderIconOpen) {
+                                        thisNode.iconClose = folderIcon;
+                                        thisNode.iconOpen = folderIconOpen;
+                                    }
+                                    continue;
                                 }
-                                continue;
+                                //设置了自定义文件图标
+                                if (fileIcon) {
+                                    thisNode.icon = fileIcon;
+                                }
                             }
-                            //设置了自定义文件图标
-                            if (fileIcon) {
-                                thisNode.icon = fileIcon;
-                            }
-                        }
-                    })(this.treeNodes)
+                        })(this.treeNodes)
+                    }
                 }
 
-                //设置了展开等级
+                //设置展开等级
                 if (parseInt(this.setting.expandLevel) > 0) {
                     var roots = [];
                     $.each(this.treeNodes,function(i,node){
@@ -153,7 +151,6 @@
                     if(!roots.length){
                         roots.push(this.treeNodes[0]);
                     }
-                    console.log(roots)
                     for (var i = 0; i < roots.length; i++) {
                         this.treeNodes = this.formatDataByExpandLevel(this.treeNodes,roots[i][this.zTreeSetting.data.simpleData.pIdKey], this.setting.expandLevel).data;
                     }
