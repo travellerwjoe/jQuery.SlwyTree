@@ -192,7 +192,10 @@
                 }
                 var _self = this;
                 this.ztreeObj.setting.callback.onCheck = function (e, id, node) {
-                    // e.stopPropagation();
+                    //去除半选中的父节点数据
+                    var nodes=_self.getFullyCheckedNodes(_self.selectedNodeList);
+                    _self.selectedNodeList=nodes.list;
+                    _self.selectedListData=nodes.listData;
                     if (node.checked) {
                         //选择包含所有子节点
                         if (_self.setting.selectContainChildren) {
@@ -206,8 +209,8 @@
 
                             $.each(allChildrenNodes, function (i, node) {
                                 if (_self.selectedNodeList.indexOf(node) < 0) {
-                                    _self.selectedNodeList.push(node);
-                                    _self.selectedListData.push(node.data);
+                                        _self.selectedNodeList.push(node);
+                                        _self.selectedListData.push(node.data);
                                 }
 
                                 //如果设置为选择时不包含自身节点并且不是只包含最底层子节点，手动将所有子节点checked置为true
@@ -221,6 +224,8 @@
                             _self.selectedNodeList.push(node);
                             _self.selectedListData.push(node.data);
                         }
+
+
                     } else {
                         if (_self.setting.selectContainChildren) {
                             //获取所有最底层的子节点
@@ -331,6 +336,7 @@
             },
             //渲染已选择列表
             renderSelectedNodeList: function () {
+                console.log(this.selectedNodeList)
                 var html = '';
                 for (var i = 0; i < this.selectedNodeList.length; i++) {
                     var thisNode = this.selectedNodeList[i],
@@ -516,6 +522,22 @@
                     })(node)
                 })
             },*/
+            //去除半选状态的node节点
+            getFullyCheckedNodes:function(nodes){
+                var list=[],
+                    listData=[];
+                $.each(nodes,function(i,node){
+                    //如果不存在子节点或是父节点并且子节点已全部勾选则添加，以防添加了半勾选状态的父节点
+                    if(node.check_Child_State=="-1"||node.check_Child_State==2) {
+                        list.push(node);
+                        listData.push(node.data);
+                    }
+                })
+                return {
+                    list:list,
+                    listData:listData
+                };
+            },
             destroy: function () {
                 this.ztreeObj.destroy();
             },
