@@ -7,6 +7,9 @@
     if (typeof define === 'function' && define.amd) {
         //AMD模式
         define(['jquery', 'zTree'], factory);
+    } else if (typeof module !== 'undefined' && module.exports) {
+        //CommonJS模式
+        module.exorts = factory(require('jquery'), require('zTree'));
     } else {
         //全局模式
         factory(jQuery);
@@ -44,7 +47,10 @@
                     showLine: false,
                     showIcon: this.setting.showIcon === false ? false : true,
                     fontCss: function (treeId, treeNode) {
-                        return (!!treeNode.highlight) ? { color: "#ff6706", "font-weight": "bold" } : { color: "#333", "font-weight": "normal" };
+                        return (!!treeNode.highlight) ? {color: "#ff6706", "font-weight": "bold"} : {
+                            color: "#333",
+                            "font-weight": "normal"
+                        };
                     }
                 },
                 check: {
@@ -53,17 +59,17 @@
                         if (this.setting.selectContainChildren) {
                             if (this.setting.selectContainSelf) {
                                 //checkbox勾选操作会影响子级节点
-                                return { "Y": "s", "N": "s" };
+                                return {"Y": "s", "N": "s"};
                             } else if (this.setting.selectOnlyChildren) {
                                 //checkbox勾选操作会影响父子级节点
-                                return { "Y": "ps", "N": "ps" };
+                                return {"Y": "ps", "N": "ps"};
                             } else {
                                 //checkbox勾选操作会影响子级节点
-                                return { "Y": "s", "N": "s" };
+                                return {"Y": "s", "N": "s"};
                             }
                         } else {
                             //checkbox勾选操作不会影响其他节点
-                            return { "Y": "", "N": "" };
+                            return {"Y": "", "N": ""};
                         }
                     }).call(this)
                 },
@@ -74,9 +80,7 @@
                         pIdKey: 'pId'
                     }
                 },
-                callback: {
-
-                }
+                callback: {}
             }; //zTree基础设置
             $.extend(true, this.zTreeSetting.data, this.setting.customData);
             this.treeNodes = treeNodes;
@@ -86,6 +90,7 @@
             this.selectedListData = []; //已选择的节点的绑定数据
             this.init();
         }
+
         SlwyTree.prototype = {
             constructor: SlwyTree,
             init: function () {
@@ -143,16 +148,16 @@
                 //设置展开等级
                 if (parseInt(this.setting.expandLevel) > 0) {
                     var roots = [];
-                    $.each(this.treeNodes,function(i,node){
+                    $.each(this.treeNodes, function (i, node) {
                         if (node.isRoot) {
                             roots.push(node);
                         }
                     })
-                    if(!roots.length){
+                    if (!roots.length) {
                         roots.push(this.treeNodes[0]);
                     }
                     for (var i = 0; i < roots.length; i++) {
-                        this.treeNodes = this.formatDataByExpandLevel(this.treeNodes,roots[i][this.zTreeSetting.data.simpleData.pIdKey], this.setting.expandLevel).data;
+                        this.treeNodes = this.formatDataByExpandLevel(this.treeNodes, roots[i][this.zTreeSetting.data.simpleData.pIdKey], this.setting.expandLevel).data;
                     }
                 } else if (parseInt(this.setting.expandLevel) == 0) {
                     $.each(this.treeNodes, function (i, node) {
@@ -193,9 +198,9 @@
                 var _self = this;
                 this.ztreeObj.setting.callback.onCheck = function (e, id, node) {
                     //去除半选中的父节点数据
-                    var nodes=_self.getFullyCheckedNodes(_self.selectedNodeList);
-                    _self.selectedNodeList=nodes.list;
-                    _self.selectedListData=nodes.listData;
+                    var nodes = _self.getFullyCheckedNodes(_self.selectedNodeList);
+                    _self.selectedNodeList = nodes.list;
+                    _self.selectedListData = nodes.listData;
                     if (node.checked) {
                         //选择包含所有子节点
                         if (_self.setting.selectContainChildren) {
@@ -209,8 +214,8 @@
 
                             $.each(allChildrenNodes, function (i, node) {
                                 if (_self.selectedNodeList.indexOf(node) < 0) {
-                                        _self.selectedNodeList.push(node);
-                                        _self.selectedListData.push(node.data);
+                                    _self.selectedNodeList.push(node);
+                                    _self.selectedListData.push(node.data);
                                 }
 
                                 //如果设置为选择时不包含自身节点并且不是只包含最底层子节点，手动将所有子节点checked置为true
@@ -330,7 +335,7 @@
                     html.push('</div>');
                     html.push('</div>');
 
-                    selectBoxDiv.css({ 'overflow': 'auto', 'height': '100%' }).append(html.join(''));
+                    selectBoxDiv.css({'overflow': 'auto', 'height': '100%'}).append(html.join(''));
                 }
                 this.selector.html(slwyTreeDiv);
             },
@@ -388,7 +393,8 @@
             searchFilterShow: function (event) {
                 var keyword = $.trim(event.target.value),
                     allNodes = this.ztreeObj.getNodes(); //所有节点
-                this.searchNodes = this.ztreeObj.getNodesByParamFuzzy('name', keyword);; //搜索匹配节点
+                this.searchNodes = this.ztreeObj.getNodesByParamFuzzy('name', keyword);
+                ; //搜索匹配节点
                 this.ztreeObj.hideNodes(allNodes);
                 $.each(this.searchNodes, function (i, node) {
                     (function (searchNode) {
@@ -477,6 +483,7 @@
                     level--;
                     return r;
                 }
+
                 console.log(formatData);
                 return {
                     data: data,
@@ -485,57 +492,57 @@
             },
             //将数据格式化为树级结构
             /*formatDataToTreenodes: function(list, p_id) {
-                var r = [],
-                    id = this.zTreeSetting.data.simpleData.idKey,
-                    pId = this.zTreeSetting.data.simpleData.pIdKey;
-                p_id = p_id != undefined ? p_id : undefined;
-                $.each(list, function(i, item) {
-                    if (item[pId] == p_id) {
-                        var length = r.length;
-                        r[length] = item;
-                        var t = _findChildren(list, item[id])
-                        if (t.length) {
-                            r[length].children = t;
-                        }
-                    }
-                });
-                return r;
-            },*/
+             var r = [],
+             id = this.zTreeSetting.data.simpleData.idKey,
+             pId = this.zTreeSetting.data.simpleData.pIdKey;
+             p_id = p_id != undefined ? p_id : undefined;
+             $.each(list, function(i, item) {
+             if (item[pId] == p_id) {
+             var length = r.length;
+             r[length] = item;
+             var t = _findChildren(list, item[id])
+             if (t.length) {
+             r[length].children = t;
+             }
+             }
+             });
+             return r;
+             },*/
             //根据设定的expandLevel给格式化后的树形结构数据添加open展开属性
             /*setExpandByExpandLevel: function(expandLevel) {
-                var level = 0;
-                treeNodes.forEach(function(node, i) {
-                    (function(node) {
-                        var hasChildren = !!node.children;
-                        level++;
-                        if (!hasChildren) {
-                            level--;
-                            return false;
-                        }
-                        if (level <= 4) {
-                            node.open = true;
-                        }
-                        for (var i = 0; i < node.children.length; i++) {
-                            arguments.callee.call(this, node.children[i]);
-                        }
-                        level--;
-                    })(node)
-                })
-            },*/
+             var level = 0;
+             treeNodes.forEach(function(node, i) {
+             (function(node) {
+             var hasChildren = !!node.children;
+             level++;
+             if (!hasChildren) {
+             level--;
+             return false;
+             }
+             if (level <= 4) {
+             node.open = true;
+             }
+             for (var i = 0; i < node.children.length; i++) {
+             arguments.callee.call(this, node.children[i]);
+             }
+             level--;
+             })(node)
+             })
+             },*/
             //去除半选状态的node节点
-            getFullyCheckedNodes:function(nodes){
-                var list=[],
-                    listData=[];
-                $.each(nodes,function(i,node){
+            getFullyCheckedNodes: function (nodes) {
+                var list = [],
+                    listData = [];
+                $.each(nodes, function (i, node) {
                     //如果不存在子节点或是父节点并且子节点已全部勾选则添加，以防添加了半勾选状态的父节点
-                    if(node.check_Child_State=="-1"||node.check_Child_State==2) {
+                    if (node.check_Child_State == "-1" || node.check_Child_State == 2) {
                         list.push(node);
                         listData.push(node.data);
                     }
                 })
                 return {
-                    list:list,
-                    listData:listData
+                    list: list,
+                    listData: listData
                 };
             },
             destroy: function () {
